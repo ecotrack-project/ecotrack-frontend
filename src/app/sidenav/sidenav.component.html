@@ -1,0 +1,83 @@
+<!-- Sidenav -->
+<div id="sidenav">
+
+  <!-- Login section -->
+  <div id="login-section" *ngIf="!isUserLoggedIn">
+
+    <h1>Login</h1>
+
+    <form id="login-form">
+      <mat-form-field class="email-form">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [formControl]="emailFormControl" [errorStateMatcher]="matcher"
+          placeholder="es. nome@mail.com">
+        @if (emailFormControl.hasError('email') && !emailFormControl.hasError('required')) {
+        <mat-error>Email <strong>non valida!</strong></mat-error>
+        }
+        @if (emailFormControl.hasError('required')) {
+        <mat-error>Email <strong>necessaria!</strong></mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="password-form">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" />
+        <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()">
+          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+    </form>
+
+    <div id="button-container">
+      <button mat-button id="loginbutton" (click)="loginUser()">Login</button>
+      <button mat-button id="discardbutton">Annulla</button>
+    </div>
+
+  </div>
+
+  <!-- User section -->
+  <div id="user-content" *ngIf="isUserLoggedIn">
+    <div>
+
+      <h1>Dashboard</h1>
+
+      <mat-divider></mat-divider>
+
+      <mat-tab-group>
+        <!-- First tab for cleaning -->
+        <mat-tab label="Pulizia">
+          <p>Selezionare tipologia di rifiuto</p>
+          <section class="trashbox-section">
+            <span class="trashbox-list-section">
+              <mat-checkbox class="trashbox-margin" [checked]="task().completed" [indeterminate]="partiallyComplete()"
+                (change)="update($event.checked)">
+                {{task().name}}
+              </mat-checkbox>
+            </span>
+            <span class="trashbox-list-section">
+              <ul>
+                @for (subtask of task().subtasks; track subtask; let i = $index) {
+                <li>
+                  <mat-checkbox [checked]="subtask.completed" (change)="update($event.checked, i)">
+                    {{subtask.name}}
+                  </mat-checkbox>
+                </li>
+                }
+              </ul>
+            </span>
+          </section>
+
+        <!-- Secong tab for reports -->
+        </mat-tab>
+        <mat-tab label="Segnalazioni">
+          <p>Non sono presenti segnalazioni</p>
+        </mat-tab>
+      </mat-tab-group>
+
+    </div>
+    <button mat-flat-button id="logoutbutton" (click)="logoutUser()">Logout</button>
+  </div>
+
+</div>

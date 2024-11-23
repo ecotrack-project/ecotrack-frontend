@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "description": "Plastica",
+    "fill_level": 95,
+    "location": {
+      "latitude": 40.832848,
+      "longitude": 16.553611
+    }
+  },
+  {
+    "id": 2,
+    "description": "Plastica",
+    "fill_level": 82,
+    "location": {
+      "latitude": 40.828100,
+      "longitude": 16.552340
+    }
+  },
+  {
+    "id": 3,
+    "description": "Plastica",
+    "fill_level": 63,
+    "location": {
+      "latitude": 40.834063,
+      "longitude": 16.558287
+    }
+  },
+  {
+    "id": 4,
+    "description": "Plastica",
+    "fill_level": 45,
+    "location": {
+      "latitude": 40.827759,
+      "longitude": 16.549875
+    }
+  },
+  {
+    "id": 5,
+    "description": "Plastica",
+    "fill_level": 67,
+    "location": {
+      "latitude": 40.830221,
+      "longitude": 16.561002
+    }
+  },
+  {
+    "id": 6,
+    "description": "Indifferenziato",
+    "fill_level": 92,
+    "location": {
+      "latitude": 40.824575,
+      "longitude": 16.556077
+    }
+  },
+  {
+    "id": 7,
+    "description": "Indifferenziato",
+    "fill_level": 78,
+    "location": {
+      "latitude": 40.829741,
+      "longitude": 16.544378
+    }
+  },
+  {
+    "id": 8,
+    "description": "Indifferenziato",
+    "fill_level": 56,
+    "location": {
+      "latitude": 40.824003,
+      "longitude": 16.550899
+    }
+  },
+  {
+    "id": 9,
+    "description": "Indifferenziato",
+    "fill_level": 88,
+    "location": {
+      "latitude": 40.831267,
+      "longitude": 16.554194
+    }
+  },
+  {
+    "id": 10,
+    "description": "Indifferenziato",
+    "fill_level": 72,
+    "location": {
+      "latitude": 40.826993,
+      "longitude": 16.552921
+    }
+  },
+  {
+    "id": 11,
+    "description": "Carta",
+    "fill_level": 54,
+    "location": {
+      "latitude": 40.835122,
+      "longitude": 16.559432
+    }
+  },
+  {
+    "id": 12,
+    "description": "Carta",
+    "fill_level": 69,
+    "location": {
+      "latitude": 40.830933,
+      "longitude": 16.546261
+    }
+  },
+  {
+    "id": 13,
+    "description": "Carta",
+    "fill_level": 33,
+    "location": {
+      "latitude": 40.827400,
+      "longitude": 16.545189
+    }
+  },
+  {
+    "id": 14,
+    "description": "Carta",
+    "fill_level": 86,
+    "location": {
+      "latitude": 40.832445,
+      "longitude": 16.550839
+    }
+  },
+  {
+    "id": 15,
+    "description": "Carta",
+    "fill_level": 40,
+    "location": {
+      "latitude": 40.824677,
+      "longitude": 16.558036
+    }
+  },
+  {
+    "id": 16,
+    "description": "Vetro",
+    "fill_level": 60,
+    "location": {
+      "latitude": 40.832294,
+      "longitude": 16.544204
+    }
+  },
+  {
+    "id": 17,
+    "description": "Vetro",
+    "fill_level": 79,
+    "location": {
+      "latitude": 40.836210,
+      "longitude": 16.546822
+    }
+  },
+  {
+    "id": 18,
+    "description": "Vetro",
+    "fill_level": 91,
+    "location": {
+      "latitude": 40.829990,
+      "longitude": 16.547665
+    }
+  },
+  {
+    "id": 19,
+    "description": "Vetro",
+    "fill_level": 58,
+    "location": {
+      "latitude": 40.827181,
+      "longitude": 16.551278
+    }
+  },
+  {
+    "id": 20,
+    "description": "Vetro",
+    "fill_level": 44,
+    "location": {
+      "latitude": 40.835482,
+      "longitude": 16.551016
+    }
+  }
+]

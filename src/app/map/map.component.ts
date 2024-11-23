@@ -1,158 +1,116 @@
 import { Component, AfterViewInit } from '@angular/core';
-import * as data from '../../assets/bins.json';
+// import * as data from '../../assets/binsBari.json';
+import * as data from '../../assets/binsAltamura.json';
 
 @Component({
   selector: 'app-map',
-  standalone: true,
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
-
 export class MapComponent implements AfterViewInit {
-  constructor() {}
+  map: google.maps.Map | null = null;
 
-  // Metodo per non precaricare
   ngAfterViewInit(): void {
-    this.mapconfig();
+    this.initMap();
   }
 
-  // Metodo per generazione mappa
-  async mapconfig() {
-    const L = await import('leaflet');
-
-    // Metodo per ottenere la posizione GPS
+  initMap() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-
-          // Crea le icone personalizzate
-          const mylocation = L.icon({
-            iconUrl: 'assets/icons/location.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-
-
-          // Imposta mappa
-          const map = L.map('map').setView([latitude, longitude], 15);
-
-          // Layer mappa
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-          }).addTo(map);
-
-          // Metodo per aggiungere un marker con l'icona personalizzata
-          L.marker([latitude, longitude], { icon: mylocation }).addTo(map)
-            .bindPopup('Posizione attuale')
-            .openPopup();
-
-          // Icone cassonetti
-          const indifferenziato = L.icon({
-            iconUrl: 'assets/icons/indifferenziato.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-
-          const organico = L.icon({
-            iconUrl: 'assets/icons/organico.png',
-            iconSize: [32, 32], 
-            iconAnchor: [16, 32], 
-            popupAnchor: [0, -32] 
-          });
-
-          const plastica = L.icon({
-            iconUrl: 'assets/icons/plastica.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-
-          const carta = L.icon({
-            iconUrl: 'assets/icons/carta.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-
-          const vetro = L.icon({
-            iconUrl: 'assets/icons/vetro.png',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-          });
-
-          // Tipo per ciascun elemento del JSON
-          interface Element {
-          id: number;
-          description: string;
-          fill_level: number;
-          location: {
-          latitude: number;
-          longitude: number;
+          const currentLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
           };
-          }
 
-          // Caricare i dati del JSON
-          const elements = (data as any).default;
-
-          elements.forEach((item: Element) => {
-            const latitude = item.location.latitude;
-            const longitude = item.location.longitude;
-          
-            // Variabile per l'icona da usare
-            let icon;
-          
-            // Usare uno switch per scegliere l'icona in base a una condizione
-            switch (true) {
-              case (item.description == "Indifferenziato"):
-                icon = indifferenziato; 
-                break;
-              case (item.description == "Organico"):
-                icon = organico
-                break;
-              case (item.description == "Plastica"):
-                icon = plastica
-                break;
-              case (item.description == "Carta"):
-                icon = carta
-                break;
-              case (item.description == "Vetro"):
-                icon = vetro
-                break;
-              default:
-                break;
+          // Inizializza la mappa
+          this.map = new google.maps.Map(
+            document.getElementById('map') as HTMLElement,
+            {
+              center: currentLocation,
+              zoom: 15,
+              mapId: 'd97e1a9f930f1239',
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
             }
-          
-            // Aggiungi il marker alla mappa con l'icona selezionata
-            L.marker([latitude, longitude], { icon: icon })
-              .addTo(map)
-              .bindPopup(() => {
-                return `
-                  <div id="bindata">
-                    <p>Tipo rifiuto: ${item.description}</p>
-                    <p>Livello di riempimento: ${item.fill_level}%</p>
-                  </div>
-                `;
-              });
-              ; // Popup con la descrizione
-          });
-          
-          
-        },
+          );
 
-        // Errore
-        (error: any) => {
-          console.error('Errore nella geolocalizzazione', error);
-        }
+          // Aggiunge un marker sulla posizione
+          new google.maps.Marker({
+            position: currentLocation,
+            map: this.map,
+            title: 'Posizione Attuale',
+          });
+
+          // Aggiunge i marker dal JSON
+          this.addMarkers();
+
+          // Calcola e visualizza la rotta
+          this.calculateRoute(currentLocation);
+        },
+        (error) => console.error('Errore nella geolocalizzazione', error)
       );
     } else {
       console.error('Geolocalizzazione non supportata');
     }
-    
+  }
+
+  // Metodo per aggiungere i marker dei cassonetti
+  addMarkers() {
+    const elements = (data as any).default;
+
+    elements.forEach((item: any) => {
+      const position = {
+        lat: item.location.latitude,
+        lng: item.location.longitude,
+      };
+
+      new google.maps.Marker({
+        position,
+        map: this.map!,
+        title: item.description,
+        icon: {
+          url: `assets/icons/${item.description.toLowerCase()}.png`, // Icona personalizzata in base al nome rifiuto
+          scaledSize: new google.maps.Size(32, 32), // Dimensione icona
+        },
+      });
+    });
+  }
+
+  // Metodo per calcolare la rotta
+  calculateRoute(currentLocation: google.maps.LatLngLiteral) {
+    if (!this.map) return;
+
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer({
+      map: this.map,
+      suppressMarkers: true
+    });
+
+    // Waypoints dell'indifferenziato per rotta
+    const waypoints = [
+      { location: { lat: 40.824575, lng: 16.556077 }, stopover: true },
+      { location: { lat: 40.829741, lng: 16.544378 }, stopover: true },
+      { location: { lat: 40.824003, lng: 16.550899 }, stopover: true },
+      { location: { lat: 40.831267, lng: 16.554194 }, stopover: true },
+      { location: { lat: 40.826993, lng: 16.552921 }, stopover: true },
+    ];
+
+    const request: google.maps.DirectionsRequest = {
+      origin: currentLocation,
+      destination: currentLocation,
+      travelMode: google.maps.TravelMode.DRIVING,
+      optimizeWaypoints: true, // Flag che ottimizza la rotta
+      waypoints: waypoints,
+    };
+
+    directionsService.route(request, (result, status) => {
+      if (status === google.maps.DirectionsStatus.OK) {
+        directionsRenderer.setDirections(result);
+      } else {
+        console.error('Errore rotta', status);
+      }
+    });
   }
 }

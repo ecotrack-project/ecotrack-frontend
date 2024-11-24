@@ -1,5 +1,5 @@
 <!-- Sidenav -->
-<div id="sidenav">
+<div id="sidenav" [style.width]="sidenavWidth" [@sidenavAnimation]="sidenavState">
 
   <!-- Login section -->
   <div id="login-section" *ngIf="!isUserLoggedIn">

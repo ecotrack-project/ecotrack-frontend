@@ -60,13 +60,17 @@ export class MapComponent implements AfterViewInit {
   addMarkers() {
     const elements = (data as any).default;
 
+    // Traccia marker aperto
+    let currentInfoWindow: google.maps.InfoWindow | null = null;
+
     elements.forEach((item: any) => {
       const position = {
         lat: item.location.latitude,
         lng: item.location.longitude,
       };
 
-      new google.maps.Marker({
+      // Marker
+      const marker = new google.maps.Marker({
         position,
         map: this.map!,
         title: item.description,
@@ -75,8 +79,43 @@ export class MapComponent implements AfterViewInit {
           scaledSize: new google.maps.Size(32, 32), // Dimensione icona
         },
       });
+
+      // Marker info
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+        <div style="padding: 10px;">
+          <h3>${item.description}</h3>
+          <p>Livello riempimento: ${item.fill_level}%</p>
+        </div>
+      `,
+      });
+
+      // Marker click
+      marker.addListener("click", () => {
+        if (currentInfoWindow) {
+          currentInfoWindow.close();
+        }
+        infoWindow.open(this.map, marker);
+        currentInfoWindow = infoWindow;
+      });
+
     });
   }
+
+  // Crea l'InfoWindow (card)
+  infoWindow = new google.maps.InfoWindow({
+    content: `
+    <div style="padding: 10px;">
+      <h3>Informazioni Marker</h3>
+      <p>Questa è una card che appare quando clicchi sul marker!</p>
+      <ul>
+        <li>Dettaglio 1</li>
+        <li>Dettaglio 2</li>
+        <li>Dettaglio 3</li>
+      </ul>
+    </div>
+  `,
+  });
 
   // Metodo per calcolare la rotta
   calculateRoute(currentLocation: google.maps.LatLngLiteral) {
@@ -85,7 +124,7 @@ export class MapComponent implements AfterViewInit {
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({
       map: this.map,
-      suppressMarkers: true
+      suppressMarkers: true,
     });
 
     // Waypoints dell'indifferenziato per rotta

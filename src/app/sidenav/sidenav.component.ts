@@ -90,7 +90,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
           width: 'calc(100% - 40px)',
         })
       ),
-      transition('open <=> closed', [animate('0.7s ease-in-out')]),
+      transition('open <=> closed', [animate('0.5s ease-in-out')]),
     ]),
 
   ],

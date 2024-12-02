@@ -105,9 +105,9 @@ export class SidenavComponent {
   constructor(private apiService: ApiService) {}
 
   // ApiService call
-  onSelectionChange(selectedValue: string) {
+  onApiCall(selectedValue: string) {
     // Passa la stringa al service
-    this.apiService.changeData(selectedValue);
+    this.apiService.getBin(selectedValue);
   }
 
   // Email control
@@ -145,6 +145,8 @@ export class SidenavComponent {
     }
 
     this.updateSidenavState();
+
+    this.apiService.getBin("674dfa9cad19ca34f8d44358");
   }
 
   // OnChange

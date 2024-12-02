@@ -1,37 +1,37 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
-// import * as data from '../../assets/binsBari.json';
-import * as data from '../../assets/binsAltamura.json';
+import { Marker } from '../models/marker.model';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
+
 export class MapComponent implements AfterViewInit {
+  
+  // Define variables
+  markerData: Marker[] = [];
+  map: google.maps.Map | null = null;
+  trashType: String="";
+  currentInfoWindow: any;
+  
 
   // Constructor
   constructor(private apiService: ApiService) {}
 
-  // MakerData
-  markerData={};
-  trashType: String="";
-  
-  // Define Google Map
-  map: google.maps.Map | null = null;
-
   // Initialize map only after DOM
   ngAfterViewInit(): void {
-    this.apiService.currentData$.subscribe(data => {
+    this.apiService.currentData$.subscribe((data: Marker[]) => {
       this.markerData = data;
-      // Puoi fare altre cose con i dati qui
+      this.initMap();
     });
-    this.initMap();
+    // Carica i dati
+    this.apiService.getBin("674dfa9cad19ca34f8d44358");
   }
   
   // Initialize map method
   initMap() {
-
     // Position method
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -53,6 +53,9 @@ export class MapComponent implements AfterViewInit {
               fullscreenControl: false,
             }
           );
+          
+          // Add markers
+          this.addMarkers();
 
           // Add Marker on user position
           new google.maps.Marker({
@@ -60,14 +63,12 @@ export class MapComponent implements AfterViewInit {
             map: this.map,
             title: 'Posizione Attuale',
           });
-
-          // Add Marker
-          this.addMarkers();
-
-          this.getMarkers();
+    
+          console.warn(this.markerData)
+          console.log(this.markerData)
 
           // Calcola e visualizza la rotta
-          this.calculateRoute(currentLocation);
+          // this.calculateRoute(currentLocation);
         },
         (error) => console.error('Errore nella geolocalizzazione', error)
       );
@@ -76,26 +77,9 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  // Bin IDs
-  private plasticBin = "674db959ad19ca34f8d41e44";
-  private paperBin = "674dbd90e41b4d34e45e6604";
-  private glassBin = "674dbeafacd3cb34a8b2a0e6";
-  private organicBin = "674dbe02ad19ca34f8d42161";
-  private unrecyclableBin = "674dbdedacd3cb34a8b2a078";
-
-  // Get markers method
-  getMarkers() {
-    this.apiService.getBin(this.paperBin)
-  }
-
   // Add markers method
   addMarkers() {
-    const elements = (data as any).default;
-
-    // Traccia marker aperto
-    let currentInfoWindow: google.maps.InfoWindow | null = null;
-
-    elements.forEach((item: any) => {
+    this.markerData.forEach((item) => {
       const position = {
         lat: item.location.latitude,
         lng: item.location.longitude,
@@ -107,30 +91,27 @@ export class MapComponent implements AfterViewInit {
         map: this.map!,
         title: item.description,
         icon: {
-          url: `assets/icons/${item.description.toLowerCase()}.png`, // Icona personalizzata in base al nome rifiuto
-          scaledSize: new google.maps.Size(32, 32), // Dimensione icona
+          url: `assets/icons/${item.description.toLowerCase()}.png`,
+          scaledSize: new google.maps.Size(32, 32),
         },
       });
 
-      // Marker info
       const infoWindow = new google.maps.InfoWindow({
         content: `
-        <div style="padding: 10px;">
-          <h3>${item.description}</h3>
-          <p>Livello riempimento: ${item.fill_level}%</p>
-        </div>
-      `,
+          <div style="padding: 10px;">
+            <h3>${item.description}</h3>
+            <p>Livello riempimento: ${item.fill_level}%</p>
+          </div>
+        `,
       });
-
-      // Marker click
+  
       marker.addListener("click", () => {
-        if (currentInfoWindow) {
-          currentInfoWindow.close();
+        if (this.currentInfoWindow) {
+          this.currentInfoWindow.close();
         }
         infoWindow.open(this.map, marker);
-        currentInfoWindow = infoWindow;
+        this.currentInfoWindow = infoWindow;
       });
-
     });
   }
 
@@ -171,3 +152,4 @@ export class MapComponent implements AfterViewInit {
   }
   
 }
+

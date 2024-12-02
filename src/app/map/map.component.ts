@@ -1,4 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { ApiService } from '../services/api.service';
 // import * as data from '../../assets/binsBari.json';
 import * as data from '../../assets/binsAltamura.json';
 
@@ -8,13 +9,30 @@ import * as data from '../../assets/binsAltamura.json';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterViewInit {
+
+  // Constructor
+  constructor(private apiService: ApiService) {}
+
+  // MakerData
+  markerData={};
+  trashType: String="";
+  
+  // Define Google Map
   map: google.maps.Map | null = null;
 
+  // Initialize map only after DOM
   ngAfterViewInit(): void {
+    this.apiService.currentData$.subscribe(data => {
+      this.markerData = data;
+      // Puoi fare altre cose con i dati qui
+    });
     this.initMap();
   }
-
+  
+  // Initialize map method
   initMap() {
+
+    // Position method
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -23,7 +41,7 @@ export class MapComponent implements AfterViewInit {
             lng: position.coords.longitude,
           };
 
-          // Inizializza la mappa
+          // Map
           this.map = new google.maps.Map(
             document.getElementById('map') as HTMLElement,
             {
@@ -36,15 +54,17 @@ export class MapComponent implements AfterViewInit {
             }
           );
 
-          // Aggiunge un marker sulla posizione
+          // Add Marker on user position
           new google.maps.Marker({
             position: currentLocation,
             map: this.map,
             title: 'Posizione Attuale',
           });
 
-          // Aggiunge i marker dal JSON
+          // Add Marker
           this.addMarkers();
+
+          this.getMarkers();
 
           // Calcola e visualizza la rotta
           this.calculateRoute(currentLocation);
@@ -56,7 +76,19 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  // Metodo per aggiungere i marker dei cassonetti
+  // Bin IDs
+  private plasticBin = "674db959ad19ca34f8d41e44";
+  private paperBin = "674dbd90e41b4d34e45e6604";
+  private glassBin = "674dbeafacd3cb34a8b2a0e6";
+  private organicBin = "674dbe02ad19ca34f8d42161";
+  private unrecyclableBin = "674dbdedacd3cb34a8b2a078";
+
+  // Get markers method
+  getMarkers() {
+    this.apiService.getBin(this.paperBin)
+  }
+
+  // Add markers method
   addMarkers() {
     const elements = (data as any).default;
 
@@ -102,22 +134,7 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  // Crea l'InfoWindow (card)
-  infoWindow = new google.maps.InfoWindow({
-    content: `
-    <div style="padding: 10px;">
-      <h3>Informazioni Marker</h3>
-      <p>Questa è una card che appare quando clicchi sul marker!</p>
-      <ul>
-        <li>Dettaglio 1</li>
-        <li>Dettaglio 2</li>
-        <li>Dettaglio 3</li>
-      </ul>
-    </div>
-  `,
-  });
-
-  // Metodo per calcolare la rotta
+  // Calculate Route method
   calculateRoute(currentLocation: google.maps.LatLngLiteral) {
     if (!this.map) return;
 
@@ -127,7 +144,7 @@ export class MapComponent implements AfterViewInit {
       suppressMarkers: true,
     });
 
-    // Waypoints dell'indifferenziato per rotta
+    // Waypoints
     const waypoints = [
       { location: { lat: 40.824575, lng: 16.556077 }, stopover: true },
       { location: { lat: 40.829741, lng: 16.544378 }, stopover: true },
@@ -140,7 +157,7 @@ export class MapComponent implements AfterViewInit {
       origin: currentLocation,
       destination: currentLocation,
       travelMode: google.maps.TravelMode.DRIVING,
-      optimizeWaypoints: true, // Flag che ottimizza la rotta
+      optimizeWaypoints: true, // Optimized route
       waypoints: waypoints,
     };
 
@@ -152,4 +169,5 @@ export class MapComponent implements AfterViewInit {
       }
     });
   }
+  
 }

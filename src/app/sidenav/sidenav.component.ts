@@ -5,6 +5,8 @@ import {
   signal,
 } from '@angular/core';
 
+import { ApiService } from '../services/api.service';
+
 // Import material components
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -98,25 +100,39 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 })
 export class SidenavComponent {
+
+  // Constructor
+  constructor(private apiService: ApiService) {}
+
+  // ApiService call
+  onSelectionChange(selectedValue: string) {
+    // Passa la stringa al service
+    this.apiService.changeData(selectedValue);
+  }
+
+  // Email control
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
   ]);
   matcher = new MyErrorStateMatcher();
 
+  // Variables
   sidenavWidth: any;
+  isUserLoggedIn: boolean = false;
+  isLoaded: boolean = true;
 
   // Password
   hide = signal(true);
   sidenavState: string | undefined;
 
+  // Stop propagation
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
 
-  isUserLoggedIn: boolean = false;
-
+  // OnInit
   ngOnInit(): void {
     const token = localStorage.getItem('jwtToken');
 
@@ -131,15 +147,25 @@ export class SidenavComponent {
     this.updateSidenavState();
   }
 
+  // OnChange
   ngOnChanges(): void {
     this.updateSidenavState();
+    this.loadDashboard();
   }
 
+  // Load Dashboard method, used for delayed animation
+  private loadDashboard(): void {
+    setTimeout(() => {
+      this.isLoaded = true;
+    }, 1000);
+  }
+
+  // Change Sidenav size
   private updateSidenavState(): void {
     this.sidenavState = this.isUserLoggedIn ? 'open' : 'closed';
   }
 
-  // Funzione per validare il token JWT
+  // Validate token JWT
   private isValidToken(token: string): boolean {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -152,19 +178,22 @@ export class SidenavComponent {
 
   // Login
   loginUser() {
-    (this.isUserLoggedIn = true), (this.sidenavWidth = '20vw');
-    this.updateSidenavState();
+    this.isUserLoggedIn = true;
+    this.sidenavWidth = '20vw';
     localStorage.setItem(
       'jwtToken',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMzQ1LCJyb2xlIjoidXNlciIsImV4cCI6MTc2MzA0NDUxNH0.HmYTDri4DjxMNVfHWtWbGlR8uL0YUsn95Xr'
     );
+    this.updateSidenavState();
   }
 
   // Logout
-  public logoutUser() {
-    (this.isUserLoggedIn = false), (this.sidenavWidth = 'calc(100% - 40px)');
+  logoutUser() {
+    this.isUserLoggedIn = false;
+    this.sidenavWidth = 'calc(100% - 40px)';
     localStorage.removeItem('jwtToken');
     this.updateSidenavState();
+    this.isLoaded = false;
   }
 
   // Checkbox for trash type
@@ -203,4 +232,5 @@ export class SidenavComponent {
       return { ...task };
     });
   }
+
 }

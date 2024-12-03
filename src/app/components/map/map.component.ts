@@ -1,6 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Marker } from '../../models/marker.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -8,46 +9,41 @@ import { Marker } from '../../models/marker.model';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
+export class MapComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('map', { static: false }) mapElement!: ElementRef;
 
-export class MapComponent implements AfterViewInit {
-
-  // Define variables
+  // Variabili
   markerData: Marker[] = [];
   map: google.maps.Map | null = null;
-  trashType: String = "";
-  currentInfoWindow: any;
+  trashType: string = "";
+  currentInfoWindow: google.maps.InfoWindow | null = null;
+  private subscriptions: Subscription = new Subscription();
 
+  // Costruttore
+  constructor(private apiService: ApiService) {}
 
-  // Constructor
-  constructor(private apiService: ApiService) { }
-
-  ngOnInit() {
-
-    // METODO PER CHIAMARE METODO COMPONENTE DA ALTRO COMPONENTE
-    this.apiService.route$.subscribe(() => {
-      this.calculateRoute;
-    });
-
-    this.apiService.method2$.subscribe(() => {
-      this.method2();
-    });
-  }
-
-  // Initialize map only after DOM
+  // Metodo eseguito dopo il caricamento della view
   ngAfterViewInit(): void {
-    this.apiService.currentData$.subscribe((data: Marker[]) => {
-      this.markerData = data;
-      this.initMap();
-    });
-    // Carica i dati
+    // Sottoscrizioni ai dati del servizio
+    this.subscriptions.add(
+      this.apiService.currentData$.subscribe((data: Marker[]) => {
+        this.markerData = data;
+        this.initMap();
+      })
+    );
+
+    // Chiamata per caricare i dati
     this.apiService.getBin("674dfa9cad19ca34f8d44358");
   }
 
-  // Initialize map method
-  initMap() {
-
+  // Metodo per inizializzare la mappa
+  initMap(): void {
+    const mapContainer = this.mapElement?.nativeElement;
+    if (!mapContainer) {
+      console.error('Elemento map non trovato');
+      return;
+    }
     if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-    // Position method
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -56,30 +52,33 @@ export class MapComponent implements AfterViewInit {
               lng: position.coords.longitude,
             };
 
-            // Map
-            this.map = new google.maps.Map(
-              document.getElementById('map') as HTMLElement,
-              {
-                center: currentLocation,
-                zoom: 15,
-                mapId: 'd97e1a9f930f1239',
-                streetViewControl: false,
-                mapTypeControl: false,
-                fullscreenControl: false,
-              }
-            );
+            this.map = new google.maps.Map(mapContainer, {
+              center: currentLocation,
+              zoom: 15,
+              mapId: 'd97e1a9f930f1239',
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+            });
 
-            // Add markers
             this.addMarkers();
 
-            // Add Marker on user position
-            new google.maps.Marker({
+            // Aggiunge un marker sulla posizione corrente
+            new google.maps.marker.AdvancedMarkerElement({
               position: currentLocation,
               map: this.map,
               title: 'Posizione Attuale',
             });
+
           },
-          (error) => console.error('Errore nella geolocalizzazione', error)
+          (error) => {
+            console.error('Errore nella geolocalizzazione', error);
+            alert('Impossibile ottenere la posizione. Utilizzando la posizione predefinita.');
+            this.map = new google.maps.Map(mapContainer, {
+              center: { lat: 0, lng: 0 }, // Posizione predefinita
+              zoom: 15,
+            });
+          }
         );
       } else {
         console.error('Geolocalizzazione non supportata');
@@ -87,15 +86,11 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-  // Add markers method
-  addMarkers() {
+  // Metodo per aggiungere marker sulla mappa
+  addMarkers(): void {
     this.markerData.forEach((item) => {
-      const position = {
-        lat: item.location.latitude,
-        lng: item.location.longitude,
-      };
+      const position = { lat: item.location.latitude, lng: item.location.longitude };
 
-      // Marker
       const marker = new google.maps.Marker({
         position,
         map: this.map!,
@@ -125,8 +120,8 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  // Calculate Route method
-  calculateRoute(currentLocation: google.maps.LatLngLiteral) {
+  // Metodo per calcolare la rotta
+  calculateRoute(currentLocation: google.maps.LatLngLiteral): void {
     if (!this.map) return;
 
     const directionsService = new google.maps.DirectionsService();
@@ -148,7 +143,7 @@ export class MapComponent implements AfterViewInit {
       origin: currentLocation,
       destination: currentLocation,
       travelMode: google.maps.TravelMode.DRIVING,
-      optimizeWaypoints: true, // Optimized route
+      optimizeWaypoints: true,
       waypoints: waypoints,
     };
 
@@ -156,16 +151,21 @@ export class MapComponent implements AfterViewInit {
       if (status === google.maps.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
       } else {
-        console.error('Errore rotta', status);
+        console.error('Errore nel calcolo della rotta', status);
       }
     });
   }
 
-
-  // METHODS TO BE CALLED IN SIDENAV
-  method2() {
-    console.log('Method 2');
+  // Metodo aggiuntivo per eventuali funzionalità
+  method2(): void {
+    console.log('Method 2 chiamato');
   }
 
+  // Pulizia delle risorse alla distruzione del componente
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    if (this.currentInfoWindow) {
+      this.currentInfoWindow.close();
+    }
+  }
 }
-

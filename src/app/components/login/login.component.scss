@@ -1,0 +1,55 @@
+#login-section {
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    width: 20vw;
+    background-color: white;
+    color: black;
+  
+    #login-form {
+      width: 100%;
+      padding: 0;
+  
+      .email-form {
+        width: 100%;
+  
+        mat-error {
+          font-size: 10px;
+        }
+      }
+  
+      .password-form {
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+  
+    #button-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+  
+      #loginbutton {
+        padding: 10px 15px 10px 15px;
+        width: auto;
+        font-size: larger;
+        color: white;
+        background-color: #2b2d42;
+      }
+  
+      #discardbutton {
+        padding: 10px 15px 10px 15px;
+        width: auto;
+        font-size: larger;
+        color: white;
+        background-color: #d90429;
+      }
+  
+      button:hover {
+        background-color: lightgrey;
+      }
+  
+    }
+  }

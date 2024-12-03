@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Marker } from '../models/marker.model';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class ApiService {
   // XMasterKey
   private apiKey = "$2a$10$2seM6VL/O0wr/AVrbF2Jhu9bT/MHKhdZA1RwXOPY/C5wBjQgHatSm";
 
-  // Ottenere un bin (dati da un bin esistente usando l'ID)
+  // Ottenere un bin
   async getBin(binId: string): Promise<void> {
     const getUrl = `https://api.jsonbin.io/v3/b/${binId}`;
     try {
@@ -49,5 +49,20 @@ export class ApiService {
   // Metodo per aggiornare il valore della stringa
   changeData(newData: Marker[]) {
     this.dataSubject.next(newData);
+  }
+
+
+
+  // METODO PER CHIAMARE METODO DI UN COMPONENTE IN UN ALTRO COMPONENTE
+  private calculateRoute = new Subject<void>();
+  route$ = this.calculateRoute.asObservable();
+  callCalculateRoute() {
+    this.calculateRoute.next();
+  }
+
+  private method2Source = new Subject<void>();
+  method2$ = this.method2Source.asObservable();
+  triggerMethod2() {
+    this.method2Source.next();
   }
 }

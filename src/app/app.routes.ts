@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 // Components to route
-import { MapComponent } from './map/map.component';
+import { MapComponent } from './components/map/map.component';
 
 // Defines a route for each component
 export const routes: Routes = [

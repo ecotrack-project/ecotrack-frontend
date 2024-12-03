@@ -1,0 +1,42 @@
+<!-- User section -->
+  <div id="user-content">
+    <div>
+
+      <h1>Dashboard</h1>
+
+      <mat-divider></mat-divider>
+
+      <mat-tab-group>
+        <!-- First tab for cleaning -->
+        <mat-tab label="Pulizia">
+          <p>Selezionare tipologia di rifiuto</p>
+          <section class="trashbox-section">
+            <span class="trashbox-list-section">
+              <mat-checkbox class="trashbox-margin" [checked]="task().completed" [indeterminate]="partiallyComplete()"
+                (change)="update($event.checked)">
+                {{task().name}}
+              </mat-checkbox>
+            </span>
+            <span class="trashbox-list-section">
+              <ul>
+                @for (subtask of task().subtasks; track subtask; let i = $index) {
+                <li>
+                  <mat-checkbox [checked]="subtask.completed" (change)="update($event.checked, i)">
+                    {{subtask.name}}
+                  </mat-checkbox>
+                </li>
+                }
+              </ul>
+            </span>
+          </section>
+
+          <!-- Secong tab for reports -->
+        </mat-tab>
+        <mat-tab label="Segnalazioni">
+          <p>Non sono presenti segnalazioni</p>
+        </mat-tab>
+      </mat-tab-group>
+
+    </div>
+    <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>
+  </div>

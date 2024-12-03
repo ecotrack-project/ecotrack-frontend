@@ -1,0 +1,10 @@
+<!-- Sidenav -->
+<div id="sidenav" [style.width]="sidenavWidth" [@sidenavAnimation]="sidenavState">
+
+  <!-- Login section -->
+  <app-login *ngIf="!isUserLoggedIn" [loginCallback]="loginUser.bind(this)"></app-login>
+
+  <!-- User section -->
+  <app-user *ngIf="isUserLoggedIn" [logoutCallback]="logoutUser.bind(this)"></app-user>
+
+</div>

@@ -1,24 +1,37 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { ApiService } from '../services/api.service';
-import { Marker } from '../models/marker.model';
+import { ApiService } from '../../services/api.service';
+import { Marker } from '../../models/marker.model';
 
 @Component({
   selector: 'app-map',
+  standalone: true,
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
 
 export class MapComponent implements AfterViewInit {
-  
+
   // Define variables
   markerData: Marker[] = [];
   map: google.maps.Map | null = null;
-  trashType: String="";
+  trashType: String = "";
   currentInfoWindow: any;
-  
+
 
   // Constructor
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
+
+  ngOnInit() {
+  
+    // METODO PER CHIAMARE METODO COMPONENTE DA ALTRO COMPONENTE
+    this.apiService.route$.subscribe(() => {
+      this.calculateRoute;
+    });
+
+    this.apiService.method2$.subscribe(() => {
+      this.method2();
+    });
+  }
 
   // Initialize map only after DOM
   ngAfterViewInit(): void {
@@ -29,7 +42,7 @@ export class MapComponent implements AfterViewInit {
     // Carica i dati
     this.apiService.getBin("674dfa9cad19ca34f8d44358");
   }
-  
+
   // Initialize map method
   initMap() {
     // Position method
@@ -53,7 +66,7 @@ export class MapComponent implements AfterViewInit {
               fullscreenControl: false,
             }
           );
-          
+
           // Add markers
           this.addMarkers();
 
@@ -63,12 +76,6 @@ export class MapComponent implements AfterViewInit {
             map: this.map,
             title: 'Posizione Attuale',
           });
-    
-          console.warn(this.markerData)
-          console.log(this.markerData)
-
-          // Calcola e visualizza la rotta
-          // this.calculateRoute(currentLocation);
         },
         (error) => console.error('Errore nella geolocalizzazione', error)
       );
@@ -104,7 +111,7 @@ export class MapComponent implements AfterViewInit {
           </div>
         `,
       });
-  
+
       marker.addListener("click", () => {
         if (this.currentInfoWindow) {
           this.currentInfoWindow.close();
@@ -150,6 +157,12 @@ export class MapComponent implements AfterViewInit {
       }
     });
   }
-  
+
+
+  // METHODS TO BE CALLED IN SIDENAV 
+  method2() {
+    console.log('Method 2');
+  }
+
 }
 

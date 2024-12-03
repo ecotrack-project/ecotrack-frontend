@@ -1,0 +1,31 @@
+#user-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - 100px);
+    width: 100%;
+    background-color: white;
+    color: black;
+  
+    .trashbox-section {
+      margin: 12px 0;
+    }
+  
+    .trashbox-margin {
+      margin: 0 12px;
+    }
+  
+    ul {
+      list-style-type: none;
+      margin-top: 4px;
+    }
+  
+    #logoutbutton {
+      padding: 10px 15px 10px 15px;
+      width: 100%;
+      font-size: larger;
+      color: white;
+      background-color: #d90429;
+    }
+  
+  }

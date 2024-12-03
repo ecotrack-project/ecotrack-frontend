@@ -1,0 +1,34 @@
+<div id="login-section">
+
+    <h1>Login</h1>
+
+    <form id="login-form">
+      <mat-form-field class="email-form">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput [formControl]="emailFormControl"
+          placeholder="es. nome@mail.com">
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          Email <strong>non valida!</strong>
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email <strong>necessaria!</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="password-form">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" />
+        <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()">
+          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+    </form>
+
+    <div id="button-container">
+      <button mat-button id="loginbutton" (click)="doLogin()">Login</button>
+      <button mat-button id="discardbutton">Annulla</button>
+    </div>
+
+  </div>

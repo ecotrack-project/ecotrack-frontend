@@ -22,7 +22,7 @@ export class MapComponent implements AfterViewInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-  
+
     // METODO PER CHIAMARE METODO COMPONENTE DA ALTRO COMPONENTE
     this.apiService.route$.subscribe(() => {
       this.calculateRoute;
@@ -45,42 +45,45 @@ export class MapComponent implements AfterViewInit {
 
   // Initialize map method
   initMap() {
+
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
     // Position method
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const currentLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
 
-          // Map
-          this.map = new google.maps.Map(
-            document.getElementById('map') as HTMLElement,
-            {
-              center: currentLocation,
-              zoom: 15,
-              mapId: 'd97e1a9f930f1239',
-              streetViewControl: false,
-              mapTypeControl: false,
-              fullscreenControl: false,
-            }
-          );
+            // Map
+            this.map = new google.maps.Map(
+              document.getElementById('map') as HTMLElement,
+              {
+                center: currentLocation,
+                zoom: 15,
+                mapId: 'd97e1a9f930f1239',
+                streetViewControl: false,
+                mapTypeControl: false,
+                fullscreenControl: false,
+              }
+            );
 
-          // Add markers
-          this.addMarkers();
+            // Add markers
+            this.addMarkers();
 
-          // Add Marker on user position
-          new google.maps.Marker({
-            position: currentLocation,
-            map: this.map,
-            title: 'Posizione Attuale',
-          });
-        },
-        (error) => console.error('Errore nella geolocalizzazione', error)
-      );
-    } else {
-      console.error('Geolocalizzazione non supportata');
+            // Add Marker on user position
+            new google.maps.Marker({
+              position: currentLocation,
+              map: this.map,
+              title: 'Posizione Attuale',
+            });
+          },
+          (error) => console.error('Errore nella geolocalizzazione', error)
+        );
+      } else {
+        console.error('Geolocalizzazione non supportata');
+      }
     }
   }
 
@@ -159,7 +162,7 @@ export class MapComponent implements AfterViewInit {
   }
 
 
-  // METHODS TO BE CALLED IN SIDENAV 
+  // METHODS TO BE CALLED IN SIDENAV
   method2() {
     console.log('Method 2');
   }

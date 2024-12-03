@@ -59,14 +59,18 @@ export class SidenavComponent {
 
   // OnInit
   ngOnInit(): void {
-    const token = localStorage.getItem('jwtToken');
 
-    if (token && this.isValidToken(token)) {
-      this.isUserLoggedIn = true;
-      this.sidenavWidth = '20vw';
-    } else {
-      this.isUserLoggedIn = false;
-      this.sidenavWidth = 'calc(100% - 40px)';
+    if (typeof window !== 'undefined' && localStorage) {
+
+      const token = localStorage.getItem('jwtToken');
+
+      if (token && this.isValidToken(token)) {
+        this.isUserLoggedIn = true;
+        this.sidenavWidth = '20vw';
+      } else {
+        this.isUserLoggedIn = false;
+        this.sidenavWidth = 'calc(100% - 40px)';
+      }
     }
 
     this.updateSidenavState();
@@ -74,14 +78,17 @@ export class SidenavComponent {
 
   // OnChange
   ngOnChanges(): void {
-    const token = localStorage.getItem('jwtToken');
 
-    if (token && this.isValidToken(token)) {
-      this.isUserLoggedIn = true;
-      this.sidenavWidth = '20vw';
-    } else {
-      this.isUserLoggedIn = false;
-      this.sidenavWidth = 'calc(100% - 40px)';
+    if (typeof window !== 'undefined' && localStorage) {
+      const token = localStorage.getItem('jwtToken');
+
+      if (token && this.isValidToken(token)) {
+        this.isUserLoggedIn = true;
+        this.sidenavWidth = '20vw';
+      } else {
+        this.isUserLoggedIn = false;
+        this.sidenavWidth = 'calc(100% - 40px)';
+      }
     }
 
     this.updateSidenavState();

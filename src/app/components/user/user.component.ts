@@ -35,46 +35,11 @@ export class UserComponent {
 
   @Input() logoutCallback!: () => void;
 
-  // Variable
-  isUserLoggedIn: boolean = false;
-
-  // Token check on start
-  ngOnInit(): void {
-    const token = localStorage.getItem('jwtToken');
-
-    if (token && this.isValidToken(token)) {
-      this.isUserLoggedIn = true;
-    } else {
-      this.isUserLoggedIn = false;
-    }
-  }
-
-  // Token check on change
-  ngOnChanges(): void {
-    const token = localStorage.getItem('jwtToken');
-
-    if (token && this.isValidToken(token)) {
-      this.isUserLoggedIn = true;
-    } else {
-      this.isUserLoggedIn = false;
-    }
-  }
 
   // Logout
   doLogout() {
     if (this.logoutCallback) {
       this.logoutCallback();
-    }
-  }
-
-  // Check if token is valid
-  private isValidToken(token: string): boolean {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]))
-      const exp = payload.exp * 1000
-      return Date.now() < exp
-    } catch (e) {
-      return false
     }
   }
 

@@ -1,8 +1,8 @@
 export interface Marker {
-    location: {
-      latitude: number;
-      longitude: number;
-    };
-    description: string;
-    fill_level: number;
-  }
+  id: number; // Identificativo del marker
+  latitude: number; // Latitudine del marker
+  longitude: number; // Longitudine del marker
+  trashType: string; // Tipo di rifiuto (es. "Carta")
+  batteryLevel: number; // Livello di batteria
+  fillingLevel: number; // Livello di riempimento
+}

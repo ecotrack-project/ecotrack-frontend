@@ -47,9 +47,9 @@ export class SidenavComponent {
   constructor(private apiService: ApiService) { }
 
   // ApiService call
-  onApiCall(selectedValue: string) {
+  onApiCall() {
     // Passa la stringa al service
-    this.apiService.getBin(selectedValue);
+    this.apiService.getBin();
   }
 
   // Variables

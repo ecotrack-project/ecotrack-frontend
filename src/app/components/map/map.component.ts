@@ -33,7 +33,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     );
 
     // Chiamata per caricare i dati
-    this.apiService.getBin("674dfa9cad19ca34f8d44358");
+    this.apiService.getBin();
   }
 
   // Metodo per inizializzare la mappa
@@ -89,14 +89,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   // Metodo per aggiungere marker sulla mappa
   addMarkers(): void {
     this.markerData.forEach((item) => {
-      const position = { lat: item.location.latitude, lng: item.location.longitude };
+      const position = { lat: item.latitude, lng: item.longitude };
 
       const marker = new google.maps.Marker({
         position,
         map: this.map!,
-        title: item.description,
+        title: item.trashType,
         icon: {
-          url: `assets/icons/${item.description.toLowerCase()}.png`,
+          url: `assets/icons/${item.trashType.toLowerCase()}.png`,
           scaledSize: new google.maps.Size(32, 32),
         },
       });
@@ -104,8 +104,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const infoWindow = new google.maps.InfoWindow({
         content: `
           <div style="padding: 10px;">
-            <h3>${item.description}</h3>
-            <p>Livello riempimento: ${item.fill_level}%</p>
+            <h3>${item.trashType}</h3>
+            <p>Livello riempimento: ${item. fillingLevel}%</p>
           </div>
         `,
       });

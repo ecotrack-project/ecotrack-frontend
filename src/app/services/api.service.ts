@@ -22,20 +22,19 @@ export class ApiService {
   private apiKey = "$2a$10$2seM6VL/O0wr/AVrbF2Jhu9bT/MHKhdZA1RwXOPY/C5wBjQgHatSm";
 
   // Ottenere un bin
-  async getBin(binId: string): Promise<void> {
-    const getUrl = `https://api.jsonbin.io/v3/b/${binId}`;
+  async getBin(): Promise<void> {
+    const getUrl = `http://localhost:8080/trashcan/list`;
     try {
-      const response = await axios.get(getUrl, {
-        headers: {
-          'X-Master-Key': this.apiKey,
-        },
-      });
-      this.markerData = response.data.record as Marker[];
+      const response = await axios.get(getUrl);
+      this.markerData = response.data.response as Marker[]; // Modifica se il formato dei dati locali è diverso
       this.dataSubject.next(this.markerData);
+      console.log(response.data.response);
     } catch (error) {
       console.error(error);
     }
   }
+
+
 
   // Restituisci
   getMarkerData(): Marker[] {

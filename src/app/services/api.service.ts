@@ -11,7 +11,7 @@ export class ApiService {
 
   constructor() { }
 
-  private markerData: Marker[] = [];
+  public markerData: Marker[] = [];
 
   // API Testing with JSONBin
 
@@ -33,6 +33,8 @@ export class ApiService {
       console.error(error);
     }
   }
+
+
 
 
 

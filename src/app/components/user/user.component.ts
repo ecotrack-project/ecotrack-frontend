@@ -1,3 +1,5 @@
+import { ApiService } from "./../../services/api.service";
+import { MapComponent } from "./../map/map.component";
 import { Component, computed, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -33,7 +35,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class UserComponent {
 
+      // Costruttore
+  constructor(private apiService: ApiService) {}
+
   @Input() logoutCallback!: () => void;
+
+
 
 
   // Logout
@@ -67,8 +74,17 @@ export class UserComponent {
     );
   });
 
+
+  // Update the task
   update(completed: boolean, index?: number) {
+
     this.task.update((task) => {
+
+      console.log(task.name);
+      //console.log(this.apiService.markerData.map((marker) => marker.trashType));
+
+
+
       if (index === undefined) {
         task.completed = completed;
         task.subtasks?.forEach((t) => (t.completed = completed));
@@ -78,6 +94,19 @@ export class UserComponent {
       }
       return { ...task };
     });
+
   }
+
+
+  // chuse
+
+
+
+
+
+
+
+
+
 
 }

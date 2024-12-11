@@ -80,10 +80,7 @@ export class UserComponent {
 
     this.task.update((task) => {
 
-      console.log(task.name);
-      //console.log(this.apiService.markerData.map((marker) => marker.trashType));
-
-
+      this.checkedBins("Plastica");
 
       if (index === undefined) {
         task.completed = completed;
@@ -98,7 +95,23 @@ export class UserComponent {
   }
 
 
-  // chuse
+  // chosenTrashType
+  checkedBins(trashType: string) {
+
+    if(trashType === 'Plastica') {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType === trashType));
+    } else if(trashType === 'Carta') {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType === trashType));
+    } else if(trashType === 'Vetro') {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType === trashType));
+    } else if(trashType === 'Umido') {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType === trashType));
+    } else if(trashType === 'Indifferenziato') {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType === trashType));
+    } else {
+      console.log(this.apiService.markerData.filter((marker) => marker.trashType));
+    }
+  }
 
 
 

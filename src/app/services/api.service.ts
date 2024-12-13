@@ -11,6 +11,7 @@ export class ApiService {
 
   constructor() { }
 
+
   public markerData: Marker[] = [];
 
   // API Testing with JSONBin
@@ -23,18 +24,19 @@ export class ApiService {
 
   // Ottenere un bin
   async getBin(): Promise<void> {
+
     const getUrl = `http://localhost:8080/trashcan/list`;
+
     try {
       const response = await axios.get(getUrl);
       this.markerData = response.data.response as Marker[]; // Modifica se il formato dei dati locali è diverso
-      this.dataSubject.next(this.markerData);
+      this.dataSubject.next(this.markerData); // Aggiorna il BehaviorSubject con i nuovi dati ricevuti e serve per aggiornare la mappa con i nuovi dati
       console.log(response.data.response);
     } catch (error) {
       console.error(error);
     }
+
   }
-
-
 
 
 
@@ -44,7 +46,7 @@ export class ApiService {
   }
 
   // Crea un BehaviorSubject per trasmettere la stringa
-  private dataSubject = new BehaviorSubject<Marker[]>([]);
+  public dataSubject = new BehaviorSubject<Marker[]>([]);
   currentData$ = this.dataSubject.asObservable();
 
   // Metodo per aggiornare il valore della stringa
@@ -55,10 +57,13 @@ export class ApiService {
 
 
   // METODO PER CHIAMARE METODO DI UN COMPONENTE IN UN ALTRO COMPONENTE
-  private calculateRoute = new Subject<void>();
+  private calculateRoute = new Subject<any>();
+
   route$ = this.calculateRoute.asObservable();
-  callCalculateRoute() {
-    this.calculateRoute.next();
+
+
+  callCalculateRoute(parameter: any) {
+    this.calculateRoute.next(parameter); // next serve per inviare un valore al Subject e attivare il metodo in ascolto su di esso (in questo caso il metodo calculateRoute)
   }
 
   private method2Source = new Subject<void>();
@@ -66,4 +71,12 @@ export class ApiService {
   triggerMethod2() {
     this.method2Source.next();
   }
+
+  // Metodo per pulire i marker
+  public clearMarkers(): void {
+    this.dataSubject.next([]); // Aggiorna il BehaviorSubject
+    console.log("Tutti i marker sono stati rimossi dalla mappa.");
+  }
+
+
 }

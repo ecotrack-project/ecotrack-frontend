@@ -131,8 +131,9 @@ export class SidenavComponent {
 
   // METODO PER CHIAMARE METODO COMPONENTE DA ALTRO COMPONENTE
   calculateRoute() {
-    this.apiService.callCalculateRoute();
+   //this.apiService.callCalculateRoute([]);
   }
+
 
   callMethod2() {
     this.apiService.triggerMethod2();

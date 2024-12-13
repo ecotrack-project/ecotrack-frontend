@@ -48,8 +48,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const currentLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
+              lat: 45.06572,
+              lng: 7.67284,
+              //lat: position.coords.latitude,
+              //lng: position.coords.longitude,
             };
 
             this.map = new google.maps.Map(mapContainer, {
@@ -62,6 +64,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             });
 
             this.addMarkers();
+            //this.calculateRoute(currentLocation);
 
             // Aggiunge un marker sulla posizione corrente
             new google.maps.marker.AdvancedMarkerElement({
@@ -120,9 +123,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+
   // Metodo per calcolare la rotta
-  calculateRoute(currentLocation: google.maps.LatLngLiteral): void {
+  calculateRoute(currentLocation: google.maps.LatLngLiteral, waypoints: []): void {
+
+
     if (!this.map) return;
+
+
 
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -131,13 +139,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     // Waypoints
-    const waypoints = [
+    /*const waypoints = [
       { location: { lat: 40.824575, lng: 16.556077 }, stopover: true },
       { location: { lat: 40.829741, lng: 16.544378 }, stopover: true },
       { location: { lat: 40.824003, lng: 16.550899 }, stopover: true },
       { location: { lat: 40.831267, lng: 16.554194 }, stopover: true },
       { location: { lat: 40.826993, lng: 16.552921 }, stopover: true },
-    ];
+    ];*/
+
+
 
     const request: google.maps.DirectionsRequest = {
       origin: currentLocation,

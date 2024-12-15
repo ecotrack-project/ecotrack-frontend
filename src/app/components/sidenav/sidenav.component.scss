@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   top: 0;
   left: 0;
   height: 100vh;
@@ -13,20 +12,25 @@
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  overflow-y: auto; 
+  overflow-y: auto;
 
   #logo {
-    margin-top: 30px;
+    margin-top: 50px;
     margin-bottom: 50px;
-    width: 100%;
+    width: 90%;
     max-width: 400px;
     height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
   }
-  
+
   #logo img {
     width: 100%;
     height: auto;

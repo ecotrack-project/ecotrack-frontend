@@ -1,30 +1,42 @@
 #user-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    background-color: white;
-    color: black;
-  
-    .trashbox-section {
-      margin: 12px 0;
-    }
-  
-    .trashbox-margin {
-      margin: 0 12px;
-    }
-  
-    ul {
-      list-style-type: none;
-      margin-top: 4px;
-    }
-  
-    #logoutbutton {
-      padding: 10px 15px 10px 15px;
-      width: 100%;
-      font-size: larger;
-      color: white;
-      background-color: #d90429;
-    }
-  
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  color: black;
+  margin-top: 40px;
+
+  .trashbox-section {
+    margin: 12px 0;
   }
+
+  .trashbox-margin {
+    margin: 0 12px;
+  }
+
+  ul {
+    list-style-type: none;
+    margin-top: 4px;
+  }
+
+  #logoutbutton {
+    padding: 10px 15px 10px 15px;
+    margin-top: auto;
+    bottom: 0px;
+    width: 100%;
+    font-size: larger;
+    color: white;
+    bottom: 0px;
+    background-color: #d90429;
+  }
+
+  #calculateRoute {
+    padding: 10px 15px 10px 15px;
+    width: 100%;
+    font-size: larger;
+    color: white;
+    background-color: #2b2d42;
+    margin-bottom: 10px;
+  }
+
+}

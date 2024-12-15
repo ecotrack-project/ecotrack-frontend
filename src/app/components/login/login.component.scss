@@ -1,9 +1,15 @@
-#login-section {
+#login-container {
+  height: calc(100vh - 20px);
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  
+  #login-section {
     align-items: center;
     justify-content: center;
     height: 50vh;
     width: 20vw;
-    background-color: white;
     color: black;
   
     #login-form {
@@ -53,3 +59,4 @@
   
     }
   }
+}

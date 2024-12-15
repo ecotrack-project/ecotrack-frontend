@@ -16,17 +16,14 @@
             </div>
           </span>
         </section>
+        <button  mat-flat-button id="calculateRoute"  (click)="calculateRoute()">Naviga</button>
       </mat-tab>
       <!-- Second tab for reports -->
       <mat-tab label="Segnalazioni">
         <p>Non sono presenti segnalazioni</p>
       </mat-tab>
     </mat-tab-group>
+    <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>
   </div>
-  <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>
-  <button  mat-flat-button id="calculateRoute"  (click)="calculateRoute()" style="margin: 10px; padding: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
-    Calcola la Route
-  </button>
-
 
 </div>

@@ -50,10 +50,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             const currentLocation = {
               lat: 45.06572,
               lng: 7.67284,
-              //lat: position.coords.latitude,
-              //lng: position.coords.longitude,
+              // lat: position.coords.latitude,
+              // lng: position.coords.longitude,
             };
 
+            // Inizializza la mappa
             this.map = new google.maps.Map(mapContainer, {
               center: currentLocation,
               zoom: 15,
@@ -63,8 +64,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               fullscreenControl: false,
             });
 
+            // Aggiungi i marker alla mappa
             this.addMarkers();
-            //this.calculateRoute(currentLocation);
+
+            // Calcolo della rotta dopo aver aggiunto i marker
+            this.calculateRoute(currentLocation);
 
             // Aggiunge un marker sulla posizione corrente
             new google.maps.marker.AdvancedMarkerElement({
@@ -104,15 +108,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
       });
 
+      // Informazioni visualizzabili al clic sul marker
       const infoWindow = new google.maps.InfoWindow({
         content: `
           <div style="padding: 10px;">
             <h3>${item.trashType}</h3>
-            <p>Livello riempimento: ${item. fillingLevel}%</p>
+            <p>Livello riempimento: ${item.fillingLevel}%</p>
           </div>
         `,
       });
 
+      // Assegna il comportamento al clic sul marker
       marker.addListener("click", () => {
         if (this.currentInfoWindow) {
           this.currentInfoWindow.close();
@@ -124,39 +130,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
 
+
+
   // Metodo per calcolare la rotta
-  calculateRoute(currentLocation: google.maps.LatLngLiteral, waypoints: []): void {
-
-
-    if (!this.map) return;
-
-
+  public calculateRoute(currentLocation: google.maps.LatLngLiteral): void {
+    if (!this.map || this.markerData.length === 0) {
+      console.warn('Mappa o marker non disponibili per il calcolo della rotta.');
+      return;
+    }
 
     const directionsService = new google.maps.DirectionsService();
+
     const directionsRenderer = new google.maps.DirectionsRenderer({
       map: this.map,
-      suppressMarkers: true,
+      suppressMarkers: false, // Visualizza anche i marker lungo il percorso
     });
 
-    // Waypoints
-    /*const waypoints = [
-      { location: { lat: 40.824575, lng: 16.556077 }, stopover: true },
-      { location: { lat: 40.829741, lng: 16.544378 }, stopover: true },
-      { location: { lat: 40.824003, lng: 16.550899 }, stopover: true },
-      { location: { lat: 40.831267, lng: 16.554194 }, stopover: true },
-      { location: { lat: 40.826993, lng: 16.552921 }, stopover: true },
-    ];*/
+    // Creazione dei waypoints dai marker
+    const waypoints: google.maps.DirectionsWaypoint[] =
 
+    this.markerData.map((item) => ({
+      location: { lat: item.latitude, lng: item.longitude },
+      stopover: true, // Indica che questi punti devono essere inclusi nel percorso
+    }));
 
-
+    // Configurazione della richiesta alla Directions API
     const request: google.maps.DirectionsRequest = {
       origin: currentLocation,
-      destination: currentLocation,
+      destination: currentLocation, // Percorso circolare
       travelMode: google.maps.TravelMode.DRIVING,
-      optimizeWaypoints: true,
       waypoints: waypoints,
+      optimizeWaypoints: true
     };
 
+
+    // Richiesta alla Directions API
     directionsService.route(request, (result, status) => {
       if (status === google.maps.DirectionsStatus.OK) {
         directionsRenderer.setDirections(result);
@@ -164,7 +172,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         console.error('Errore nel calcolo della rotta', status);
       }
     });
+
   }
+
+
 
   // Metodo aggiuntivo per eventuali funzionalità
   method2(): void {

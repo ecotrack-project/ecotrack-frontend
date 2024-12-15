@@ -1,5 +1,4 @@
 import { ApiService } from './../../services/api.service';
-import { MapComponent } from './../map/map.component';
 import { Component, computed, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -32,20 +31,14 @@ import { Marker } from '../../models/marker.model';
     MatTabsModule,
   ],
   templateUrl: './user.component.html',
-  styleUrl: './user.component.scss',
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent {
-  // Costruttore
-  constructor(private apiService: ApiService) {}
 
   @Input() logoutCallback!: () => void;
 
-  // Logout
-  doLogout() {
-    if (this.logoutCallback) {
-      this.logoutCallback();
-    }
-  }
+  // Variabile esterna per conservare i bidoni scelti
+  public selectedBins: Marker[] = [];
 
   // Checkbox for trash type
   readonly task = signal<Task>({
@@ -57,7 +50,7 @@ export class UserComponent {
       { name: 'Carta', completed: false },
       { name: 'Vetro', completed: false },
       { name: 'Umido', completed: false },
-      { name: 'Indifferenziato', completed: false },
+      { name: 'Indifferenziata', completed: false },
     ],
   });
 
@@ -72,62 +65,84 @@ export class UserComponent {
     );
   });
 
-  // Variabile esterna per conservare i bidoni scelti
-  public selectedBins: any[] = [];
+  // Costruttore
+  constructor(private apiService: ApiService) {}
 
-  // Update the task
-  update(completed: boolean, index?: number) {
-    console.log(index);
-    console.log(completed);
+  // Logout
+  doLogout(): void {
+    if (this.logoutCallback) {
+      this.logoutCallback();
+    }
+  }
+
+
+  // Aggiornamento del task
+  update(completed: boolean, index?: number): void {
+    console.log('Aggiornamento task:', completed, index);
 
     this.task.update((task) => {
-      // Clear all markers and update selected bins
       this.apiService.clearMarkers();
-      if (index !== undefined) {
-        const typeselected: any = task.subtasks?.[index].name.toString();
-        this.checkedBins(typeselected);
-        console.log(this.selectedBins);
-        this.apiService.changeData(this.selectedBins || []);
-        //this.apiService.CalculateRoute(this.selectedBins);
-      }
 
-      if (index === undefined) {
-        // Update the main task and all subtasks
+      if (index !== undefined) {
+        const trashType = task.subtasks?.[index]?.name;
+        if (trashType) {
+          this.filterBinsByType(trashType);
+        }
+        this.apiService.changeData(this.selectedBins);
+      } else {
         task.completed = completed;
         task.subtasks?.forEach((t) => (t.completed = completed));
-      } else {
-        // Uncheck all other subtasks
-        task.subtasks?.forEach((t, i) => {
-          t.completed = i === index ? completed : false;
-        });
-        // Update the main task's completed status
+      }
+
+      if (index !== undefined) {
+        task.subtasks?.forEach((t, i) => (t.completed = i === index ? completed : false));
         task.completed = task.subtasks?.every((t) => t.completed) ?? true;
       }
+
       return { ...task };
     });
   }
 
+
   // Funzione per filtrare i bidoni in base al tipo di rifiuto
-  checkedBins(trashType?: string) {
-    if (!trashType) {
-      // Se trashType è undefined o null, conserva tutti i bidoni
-      this.selectedBins = [...this.apiService.markerData]; // Copia l'array di bidoni
+  private filterBinsByType(trashType: string): void {
+    this.selectedBins = this.apiService.markerData.filter(
+      (marker) => marker.trashType === trashType
+    );
+    console.log(`Bidoni filtrati per tipo "${trashType}":`, this.selectedBins);
+  }
+
+  // Calcola la route basata sui bidoni selezionati
+  calculateRoute(): void {
+    if (this.selectedBins.length === 0) {
+      console.warn('Nessun bidone selezionato per calcolare la route.');
       return;
     }
 
-    switch (trashType) {
-      case 'Plastica':
-      case 'Carta':
-      case 'Vetro':
-      case 'Umido':
-      case 'Indifferenziato':
-        this.selectedBins = this.apiService.markerData.filter((marker) => marker.trashType === trashType);
-        console.log(this.selectedBins);
-        break;
-      default:
-        console.log(`Tipo di rifiuto non valido: ${trashType}`);
-        this.selectedBins = this.apiService.getMarkerData();
-        break;
-    }
+    // Creazione dei waypoints basati sui bidoni selezionati
+    const waypoints = this.selectedBins.map((bin) => ({
+      location: { lat: bin.latitude, lng: bin.longitude },
+      stopover: true,
+    }));
+
+    // Ottieni la posizione corrente
+    this.apiService.getCurrentLocation().then((currentLocation) => {
+      this.apiService.calculateRoute(currentLocation, waypoints).subscribe(
+        (response) => {
+          console.log('Route calcolata con successo:', response);
+        },
+        (error) => {
+          console.error('Errore nel calcolo della route:', error);
+        }
+      );
+    });
   }
+
+
+
+
+
+
+
+  
 }

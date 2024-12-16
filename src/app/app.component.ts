@@ -1,4 +1,4 @@
-import { Component,  OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
@@ -17,15 +17,7 @@ import { SidenavComponent } from "./components/sidenav/sidenav.component";
   styleUrls: ['./app.component.scss']
 })
 
-export class AppComponent implements OnInit {
-  isLoading = false;
-  
+export class AppComponent {
   constructor(private router: Router) {}
-
-  ngOnInit() {
-    setTimeout(() => {
-      this.isLoading = true;
-    }, 2000);
-  }
 
 }

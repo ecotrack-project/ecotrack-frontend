@@ -1,17 +1,19 @@
 #login-container {
-  margin-top: 100px;
+  margin-top: 15px;
   width: 100vw;
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   
   #login-section {
     align-items: center;
     justify-content: center;
-    height: 50vh;
     min-width: 20vw;
-    max-width: 400px;
+    max-width: 300px;
     color: black;
+    background-color: white;
+    padding: 20px 40px 40px 40px;
+    border-radius: 20px;
   
     #login-form {
       width: 100%;
@@ -44,6 +46,7 @@
         font-size: larger;
         color: white;
         background-color: #2b2d42;
+        border-radius: 12px;
       }
   
       #discardbutton {
@@ -52,6 +55,7 @@
         font-size: larger;
         color: white;
         background-color: #d90429;
+        border-radius: 12px;
       }
   
       button:hover {

@@ -14,14 +14,22 @@
   z-index: 1000;
   overflow-y: auto;
 
+  background-image: url('../../../assets/blur.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
   #logo {
     margin-top: 50px;
-    width: 90%;
-    max-width: 400px;
+    width: calc(100% - 30px);
+    max-width: 350px;
     height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
   }
 
   #logo img {

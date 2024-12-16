@@ -6,6 +6,11 @@
   color: black;
   margin-top: 40px;
 
+  background-color: white;
+  padding: 20px 40px 40px 40px;
+  margin: 15px -40px -40px -40px;
+  border-radius: 20px;
+
   .trashbox-section {
     margin: 12px 0;
   }
@@ -28,6 +33,7 @@
     color: white;
     bottom: 0px;
     background-color: #d90429;
+    border-radius: 12px;
   }
 
   #calculateRoute {
@@ -37,6 +43,7 @@
     color: white;
     background-color: #2b2d42;
     margin-bottom: 10px;
+    border-radius: 12px;
   }
 
 }

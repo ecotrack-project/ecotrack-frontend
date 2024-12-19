@@ -1,13 +1,13 @@
 #user-content {
   display: flex;
   flex-direction: column;
-  width: 15vw;
+  width: 17vw;
   background-color: white;
   color: black;
-  margin-top: 40px;
+  margin-top: 4px;
 
   background-color: white;
-  padding: 20px 40px 40px 40px;
+  padding: 2vh 2vh 2vh 2vh;
   margin: 15px -40px -40px -40px;
   border-radius: 20px;
 
@@ -17,11 +17,6 @@
 
   .trashbox-margin {
     margin: 0 12px;
-  }
-
-  ul {
-    list-style-type: none;
-    margin-top: 4px;
   }
 
   #logoutbutton {

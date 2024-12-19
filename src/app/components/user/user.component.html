@@ -1,29 +1,27 @@
 <!-- User section -->
 <div id="user-content">
-  <div>
-    <h1>Dashboard</h1>
-    <mat-divider></mat-divider>
-    <mat-tab-group>
-      <!-- First tab for cleaning -->
-      <mat-tab label="Pulizia">
-        <p>Selezionare tipologia di rifiuto</p>
-        <section class="trashbox-section">
-          <span class="trashbox-list-section">
-            <div *ngFor="let subtask of task().subtasks; let i = index">
-              <mat-checkbox class="trashbox-margin" [checked]="subtask.completed" (change)="update($event.checked, i)">
-                {{subtask.name}}
-              </mat-checkbox>
-            </div>
-          </span>
-        </section>
-        <button  mat-flat-button id="calculateRoute"  (click)="calculateRoute()">Naviga</button>
-      </mat-tab>
-      <!-- Second tab for reports -->
-      <mat-tab label="Segnalazioni">
-        <p>Non sono presenti segnalazioni</p>
-      </mat-tab>
-    </mat-tab-group>
-    <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>
-  </div>
+  <h1>Dashboard</h1>
+  <mat-tab-group fitInkBarToContent>
+    <!-- First tab for cleaning -->
+    <mat-tab label="Pulizia">
+      <p>Selezionare tipologia di rifiuto</p>
+      <section class="trashbox-section">
+        <span class="trashbox-list-section">
+          <div *ngFor="let subtask of task().subtasks; let i = index">
+            <mat-checkbox class="trashbox-margin" [checked]="subtask.completed" (change)="update($event.checked, i)">
+              {{subtask.name}}
+            </mat-checkbox>
+          </div>
+        </span>
+      </section>
+      <button mat-flat-button id="calculateRoute" (click)="calculateRoute()">Naviga</button>
+    </mat-tab>
+    <!-- Second tab for reports -->
+    <mat-tab label="Segnalazioni">
+      <p>Non sono presenti segnalazioni</p>
+    </mat-tab>
+  </mat-tab-group>
+  <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>
+
 
 </div>

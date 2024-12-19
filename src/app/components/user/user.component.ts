@@ -49,8 +49,8 @@ export class UserComponent {
       { name: 'Plastica', completed: false },
       { name: 'Carta', completed: false },
       { name: 'Vetro', completed: false },
-      { name: 'Umido', completed: false },
-      { name: 'Indifferenziata', completed: false },
+      { name: 'Organico', completed: false },
+      { name: 'Indifferenziato', completed: false },
     ],
   });
 
@@ -144,5 +144,5 @@ export class UserComponent {
 
 
 
-  
+
 }

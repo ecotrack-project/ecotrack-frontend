@@ -13,3 +13,20 @@ $app-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($app-theme);
+
+/* Aggiungi stili personalizzati */
+.mat-tab-header {
+  height: 48px !important;
+  min-height: 48px !important;
+  overflow: hidden;
+}
+
+.mat-tab-labels {
+  display: flex !important;
+  align-items: center !important;
+  height: 48px !important;
+}
+
+.mat-tab-label {
+  line-height: 48px !important;
+}

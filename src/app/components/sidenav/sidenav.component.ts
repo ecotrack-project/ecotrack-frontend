@@ -7,6 +7,7 @@ import { LoginComponent } from '../login/login.component';
 import { ApiService } from '../../services/api.service';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-sidenav',
@@ -15,6 +16,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     UserComponent,
     LoginComponent,
     CommonModule,
+    HttpClientModule
   ],
 
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,13 +32,23 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ],
 })
 export class SidenavComponent {
+
+  // Constructor
+  constructor(
+    private apiService: ApiService,
+    private http: HttpClient
+  ) { }
+
+  // ApiService call
+  onApiCall() {
+    // Passa la stringa al service
+    this.apiService.getBin();
+  }
+
   // Variables
   sidenavWidth: any;
   isUserLoggedIn: boolean = false;
   sidenavState: string | undefined;
-
-  // Constructor
-  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.checkTokenAndSetState();
@@ -78,13 +90,30 @@ export class SidenavComponent {
     }
   }
 
-  // ApiService call
-  onApiCall(): void {
-    // Passa la stringa al service
-    this.apiService.getBin();
+  // Login
+  loginUser() {
+    // Execute login with an http request
+    this.http.post('http://localhost:8080/authenticate/login', {
+      email: 'salvigesualdo2@libero.it',
+      password: 'Salvatore2001!'
+    }).subscribe({
+      next: (res: any) => {
+        // if the request is successful, save the token in the local storage
+        console.log('Auth ok');
+        this.updateLoginState(true, res.jwt);
+      },
+      error: (err: any) => {
+        // TODO: handle error
+        console.error('Auth error');
+      }
+    });
   }
 
-  // Login State Management
+  // Logout
+  logoutUser() {
+    this.updateLoginState(false);
+  }
+
   private updateLoginState(isLoggedIn: boolean, token?: string): void {
     this.isUserLoggedIn = isLoggedIn;
     this.sidenavWidth = isLoggedIn ? '20vw' : 'calc(100% - 40px)';
@@ -94,19 +123,8 @@ export class SidenavComponent {
     } else {
       localStorage.removeItem('jwtToken');
     }
-
-    this.updateSidenavState();
   }
 
-  loginUser(): void {
-    const dummyToken =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMzQ1LCJyb2xlIjoidXNlciIsImV4cCI6MTc2MzA0NDUxNH0.HmYTDri4DjxMNVfHWtWbGlR8uL0YUsn95Xr';
-    this.updateLoginState(true, dummyToken);
-  }
-
-  logoutUser(): void {
-    this.updateLoginState(false);
-  }
 
   calculateRoute(): void {
     // Controlla se ci sono bidoni selezionati
@@ -141,7 +159,6 @@ export class SidenavComponent {
       console.error('Errore nella geolocalizzazione:', error);
     });
   }
-
 
   callMethod2(): void {
     this.apiService.triggerMethod2();

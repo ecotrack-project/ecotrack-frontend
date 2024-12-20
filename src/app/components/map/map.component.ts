@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@ang
 import { ApiService } from '../../services/api.service';
 import { Marker } from '../../models/marker.model';
 import { Subscription } from 'rxjs';
-
+import { Report } from '../../models/report.model';
 import { MapService } from '../../services/map.service';
 
 @Component({
@@ -16,6 +16,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   // Variabili
   markerData: Marker[] = [];
+  report: Report[] = [];
+
   map: google.maps.Map | null = null;
   trashType: string = "";
   currentInfoWindow: google.maps.InfoWindow | null = null;
@@ -30,6 +32,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.mapService.triggerMapMethod$.subscribe(() => {
       this.calculateRoute(this.location);
     });
+    this.initMap();
   }
   // Metodo eseguito dopo il caricamento della view
   ngAfterViewInit(): void {
@@ -40,7 +43,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.initMap();
       })
     );
+
+
+    this.subscriptions.add(
+      this.apiService.currentReportData$.subscribe((data: Report[]) => {
+        this.report = data;
+        this.initMap();
+      })
+    );
+
   }
+
+
+
+
 
   // Metodo per inizializzare la mappa
   initMap(): void {
@@ -190,11 +206,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
 
-
-  // Metodo aggiuntivo per eventuali funzionalità
-  method2(): void {
-    console.log('Method 2 chiamato');
-  }
 
   // Pulizia delle risorse alla distruzione del componente
   ngOnDestroy(): void {

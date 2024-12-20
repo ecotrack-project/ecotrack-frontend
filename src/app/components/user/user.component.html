@@ -18,7 +18,11 @@
     </mat-tab>
     <!-- Second tab for reports -->
     <mat-tab label="Segnalazioni">
-      <p>Non sono presenti segnalazioni</p>
+      <div *ngFor="let rep of reports" class="report-container">
+        <p>Id contenitore: {{rep.trashcanId}}</p>
+        <p>Email: {{rep.userEmail}}</p>
+        <p>Descrizione: {{rep.description}}</p>
+      </div>
     </mat-tab>
   </mat-tab-group>
   <button mat-flat-button id="logoutbutton" (click)="doLogout()">Logout</button>

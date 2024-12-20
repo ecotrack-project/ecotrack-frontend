@@ -86,41 +86,4 @@ export class SidenavComponent {
     this.authService.logout();
   }
 
-  calculateRoute(): void {
-    // Controlla se ci sono bidoni selezionati
-    if (!this.apiService.markerData || this.apiService.markerData.length === 0) {
-      console.warn('Nessun dato disponibile per calcolare la route.');
-      return;
-    }
-
-    // Creazione dei waypoints basati sui marker (bidoni)
-    const waypoints = this.apiService.markerData.map((marker) => ({
-      location: { lat: marker.latitude, lng: marker.longitude },
-      stopover: true, // Ogni waypoint è un punto di sosta
-    }));
-
-    if (waypoints.length === 0) {
-      console.warn('Nessun waypoint valido per calcolare la route.');
-      return;
-    }
-
-    // Ottieni la posizione corrente
-    this.apiService.getCurrentLocation().then((currentLocation) => {
-      // Chiamata al servizio per calcolare la route
-      this.apiService.calculateRoute(currentLocation, waypoints).subscribe(
-        (response) => {
-          console.log('Route calcolata con successo:', response);
-        },
-        (error) => {
-          console.error('Errore nel calcolo della route:', error);
-        }
-      );
-    }).catch((error) => {
-      console.error('Errore nella geolocalizzazione:', error);
-    });
-  }
-
-  callMethod2(): void {
-    this.apiService.triggerMethod2();
-  }
 }

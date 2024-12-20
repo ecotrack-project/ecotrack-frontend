@@ -42,6 +42,8 @@ export class UserComponent {
   // Variabile esterna per conservare i bidoni scelti
   public selectedBins: Marker[] = [];
 
+  public reports: any[] = [];
+
   // Checkbox for trash type
   readonly task = signal<Task>({
     name: 'Tutti',

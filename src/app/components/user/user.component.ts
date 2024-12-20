@@ -15,6 +15,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Marker } from '../../models/marker.model';
+import { Report } from '../../models/report.model';
 
 import { MapService } from '../../services/map.service';
 
@@ -42,7 +43,7 @@ export class UserComponent {
   // Variabile esterna per conservare i bidoni scelti
   public selectedBins: Marker[] = [];
 
-  public reports: any[] = [];
+  public reports: Report[] = [];
 
   // Checkbox for trash type
   readonly task = signal<Task>({

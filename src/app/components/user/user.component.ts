@@ -56,7 +56,7 @@ export class UserComponent {
       { name: 'Plastica', completed: false },
       { name: 'Carta', completed: false },
       { name: 'Vetro', completed: false },
-      { name: 'Umido', completed: false },
+      { name: 'Organico', completed: false },
       { name: 'Indifferenziato', completed: false },
     ],
   });
@@ -119,9 +119,11 @@ export class UserComponent {
       case 'Plastica':
       case 'Carta':
       case 'Vetro':
-      case 'Umido':
+      case 'Organico':
       case 'Indifferenziato':
-        this.selectedBins = this.apiService.markerData.filter((marker) => marker.trashType === trashType);
+        this.selectedBins = this.apiService.markerData.filter(
+          (marker) => marker.trashType === trashType
+        );
         console.log(this.selectedBins);
         break;
       default:

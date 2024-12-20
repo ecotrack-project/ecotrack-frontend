@@ -5,11 +5,11 @@
   <div id="logo">
     <img src="../../../assets/logo/title.png" alt="title">
   </div>
-  
+
   <!-- Login section -->
-  <app-login *ngIf="!isUserLoggedIn" [loginCallback]="loginUser.bind(this)"></app-login>
+  <app-login *ngIf="!isUserLoggedIn"></app-login>
 
   <!-- User section -->
   <app-user *ngIf="isUserLoggedIn" [logoutCallback]="logoutUser.bind(this)"></app-user>
-  
+
 </div>

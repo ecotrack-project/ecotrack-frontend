@@ -15,7 +15,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 // Validation
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { createEmailFormControl } from '../../utils/validation.utils';
+import { createEmailFormControl, createPasswordFormControl } from '../../utils/validation.utils';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -26,8 +27,6 @@ import { createEmailFormControl } from '../../utils/validation.utils';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
-
-
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
@@ -44,16 +43,17 @@ import { createEmailFormControl } from '../../utils/validation.utils';
 
 export class LoginComponent {
 
-  @Input() loginCallback!: () => void;
-
   // Constructor
-  constructor() {}
+  constructor(private authService: AuthService) { }
 
   // Variable
   isUserLoggedIn: boolean = false;
 
   // Email control
   emailFormControl = createEmailFormControl();
+
+  // Password control
+  passwordFormControl = createPasswordFormControl();
 
   // Hide password
   hide = signal(true);
@@ -66,9 +66,7 @@ export class LoginComponent {
 
   // Login
   doLogin() {
-    if (this.loginCallback) {
-      this.loginCallback();
-    }
+    this.authService.login(this.emailFormControl.value, this.passwordFormControl.value);
   }
 
 }

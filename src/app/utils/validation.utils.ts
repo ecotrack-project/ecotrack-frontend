@@ -8,3 +8,11 @@ export function createEmailFormControl(): FormControl {
         Validators.email,
     ]);
 }
+
+// Funzione per creare un controllo di validazione password
+export function createPasswordFormControl(): FormControl {
+    return new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+    ]);
+}

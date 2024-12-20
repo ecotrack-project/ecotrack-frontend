@@ -6,10 +6,10 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false); // Stato dell'utente
-  isLoggedIn$ = this.isLoggedInSubject.asObservable(); // Stream osservabile
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
     return this.http.post('http://localhost:8080/authenticate/login', { email, password }).subscribe({
@@ -29,5 +29,18 @@ export class AuthService {
   checkLoginState() {
     const token = localStorage.getItem('jwtToken');
     this.isLoggedInSubject.next(!!token);
+  }
+
+  isValidToken(token: string): boolean {
+    try {
+      if (!token) return false; // Verifica token vuoto o undefined
+      const parts = token.split('.');
+      if (parts.length !== 3) return false;
+      const payload = JSON.parse(atob(parts[1]));
+      const exp = payload.exp * 1000;
+      return Date.now() < exp;
+    } catch (e) {
+      return false;
+    }
   }
 }

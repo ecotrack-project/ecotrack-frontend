@@ -7,7 +7,7 @@ import { LoginComponent } from '../login/login.component';
 import { ApiService } from '../../services/api.service';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -15,8 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   imports: [
     UserComponent,
     LoginComponent,
-    CommonModule,
-    HttpClientModule
+    CommonModule
   ],
 
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,8 +34,8 @@ export class SidenavComponent {
 
   // Constructor
   constructor(
-    private apiService: ApiService,
-    private http: HttpClient
+    private authService: AuthService,
+    private apiService: ApiService
   ) { }
 
   // ApiService call
@@ -46,22 +45,23 @@ export class SidenavComponent {
   }
 
   // Variables
-  sidenavWidth: any;
   isUserLoggedIn: boolean = false;
+  sidenavWidth: any;
   sidenavState: string | undefined;
 
-  ngOnInit(): void {
-    this.checkTokenAndSetState();
-  }
-
-  ngOnChanges(): void {
-    this.checkTokenAndSetState();
+  ngOnInit() {
+    this.authService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isUserLoggedIn = loggedIn;
+      this.checkTokenAndSetState();
+      this.updateSidenavState();
+    });
+    this.authService.checkLoginState();
   }
 
   private checkTokenAndSetState(): void {
     if (typeof window !== 'undefined' && localStorage) {
       const token = localStorage.getItem('jwtToken');
-      if (token && this.isValidToken(token)) {
+      if (token && this.authService.isValidToken(token)) {
         this.isUserLoggedIn = true;
         this.sidenavWidth = '20vw';
       } else {
@@ -69,62 +69,18 @@ export class SidenavComponent {
         this.sidenavWidth = 'calc(100% - 40px)';
       }
     }
-    this.updateSidenavState();
   }
 
   // Change Sidenav size
   private updateSidenavState(): void {
     this.sidenavState = this.isUserLoggedIn ? 'open' : 'closed';
-  }
-
-  private isValidToken(token: string): boolean {
-    try {
-      if (!token) return false; // Verifica token vuoto o undefined
-      const parts = token.split('.');
-      if (parts.length !== 3) return false;
-      const payload = JSON.parse(atob(parts[1]));
-      const exp = payload.exp * 1000;
-      return Date.now() < exp;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  // Login
-  loginUser() {
-    // Execute login with an http request
-    this.http.post('http://localhost:8080/authenticate/login', {
-      email: 'salvigesualdo2@libero.it',
-      password: 'Salvatore2001!'
-    }).subscribe({
-      next: (res: any) => {
-        // if the request is successful, save the token in the local storage
-        console.log('Auth ok');
-        this.updateLoginState(true, res.jwt);
-      },
-      error: (err: any) => {
-        // TODO: handle error
-        console.error('Auth error');
-      }
-    });
+    this.sidenavWidth = this.isUserLoggedIn ? '20vw' : 'calc(100% - 40px)';
   }
 
   // Logout
   logoutUser() {
-    this.updateLoginState(false);
+    this.authService.logout();
   }
-
-  private updateLoginState(isLoggedIn: boolean, token?: string): void {
-    this.isUserLoggedIn = isLoggedIn;
-    this.sidenavWidth = isLoggedIn ? '20vw' : 'calc(100% - 40px)';
-
-    if (isLoggedIn && token) {
-      localStorage.setItem('jwtToken', token);
-    } else {
-      localStorage.removeItem('jwtToken');
-    }
-  }
-
 
   calculateRoute(): void {
     // Controlla se ci sono bidoni selezionati

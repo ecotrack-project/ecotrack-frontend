@@ -7,8 +7,9 @@ import { Marker } from '../models/marker.model';
   providedIn: 'root',
 })
 export class ApiService {
-  constructor() {}
+  constructor() { }
 
+  // Contiene i cassonetti fetchati dal server
   public markerData: Marker[] = [];
 
   // API Testing with JSONBin
@@ -63,7 +64,7 @@ export class ApiService {
 
 
   // Calcola la route
-  calculateRoute( origin: { lat: number; lng: number }, waypoints: { location: { lat: number; lng: number }; stopover: boolean }[]): Observable<any> {
+  calculateRoute(origin: { lat: number; lng: number }, waypoints: { location: { lat: number; lng: number }; stopover: boolean }[]): Observable<any> {
 
     return new Observable((observer) => {
       const directionsService = new google.maps.DirectionsService();
@@ -90,10 +91,6 @@ export class ApiService {
       });
     });
   }
-
-
-  
-
 
   // Restituisci
   getMarkerData(): Marker[] {

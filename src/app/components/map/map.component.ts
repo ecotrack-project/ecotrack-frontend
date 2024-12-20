@@ -31,9 +31,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.initMap();
       })
     );
-
-    // Chiamata per caricare i dati
-    this.apiService.getBin();
   }
 
   // Metodo per inizializzare la mappa
@@ -143,7 +140,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const directionsRenderer = new google.maps.DirectionsRenderer({
       map: this.map,
-      suppressMarkers: false, // Visualizza anche i marker lungo il percorso
+      suppressMarkers: true, // Visualizza anche i marker lungo il percorso
     });
 
     // Creazione dei waypoints dai marker

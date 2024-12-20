@@ -42,6 +42,7 @@ export class SidenavComponent {
   // ApiService call
   onApiCall() {
     // Passa la stringa al service
+    console.log('Chiamata al metodo 1111111111111111111111111');
     this.apiService.getBin();
   }
 
@@ -55,6 +56,8 @@ export class SidenavComponent {
       this.isUserLoggedIn = loggedIn;
       this.checkTokenAndSetState();
       this.updateSidenavState();
+      // Chiamata per caricare i dati
+      this.apiService.getBin();
       this.cdr.detectChanges();
     });
   }

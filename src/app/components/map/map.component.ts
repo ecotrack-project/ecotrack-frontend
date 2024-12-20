@@ -3,6 +3,8 @@ import { ApiService } from '../../services/api.service';
 import { Marker } from '../../models/marker.model';
 import { Subscription } from 'rxjs';
 
+import { MapService } from '../../services/map.service';
+
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -19,9 +21,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   currentInfoWindow: google.maps.InfoWindow | null = null;
   private subscriptions: Subscription = new Subscription();
 
-  // Costruttore
-  constructor(private apiService: ApiService) {}
+  location: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
 
+  // Costruttore
+  constructor(private apiService: ApiService, private mapService: MapService) { }
+
+  ngOnInit() {
+    this.mapService.triggerMapMethod$.subscribe(() => {
+      this.calculateRoute(this.location);
+    });
+  }
   // Metodo eseguito dopo il caricamento della view
   ngAfterViewInit(): void {
     // Sottoscrizioni ai dati del servizio
@@ -51,6 +60,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               // lng: position.coords.longitude,
             };
 
+            this.location = { lat: currentLocation.lat, lng: currentLocation.lng };
+
+
+
             // Inizializza la mappa
             this.map = new google.maps.Map(mapContainer, {
               center: currentLocation,
@@ -64,14 +77,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             // Aggiungi i marker alla mappa
             this.addMarkers();
 
-            // Calcolo della rotta dopo aver aggiunto i marker
-            this.calculateRoute(currentLocation);
-
-            // Aggiunge un marker sulla posizione corrente
-            new google.maps.marker.AdvancedMarkerElement({
+            new google.maps.Marker({
               position: currentLocation,
               map: this.map,
               title: 'Posizione Attuale',
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: '#0000FF',
+                fillOpacity: 1,
+                strokeColor: '#8FB3E6',
+                strokeWeight: 6,
+              },
             });
 
           },
@@ -146,10 +163,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // Creazione dei waypoints dai marker
     const waypoints: google.maps.DirectionsWaypoint[] =
 
-    this.markerData.map((item) => ({
-      location: { lat: item.latitude, lng: item.longitude },
-      stopover: true, // Indica che questi punti devono essere inclusi nel percorso
-    }));
+      this.markerData.map((item) => ({
+        location: { lat: item.latitude, lng: item.longitude },
+        stopover: true, // Indica che questi punti devono essere inclusi nel percorso
+      }));
 
     // Configurazione della richiesta alla Directions API
     const request: google.maps.DirectionsRequest = {

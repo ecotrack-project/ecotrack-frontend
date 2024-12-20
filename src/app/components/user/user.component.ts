@@ -16,6 +16,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Marker } from '../../models/marker.model';
 
+import { MapService } from '../../services/map.service';
+
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -66,7 +68,7 @@ export class UserComponent {
   });
 
   // Costruttore
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private mapService: MapService) { }
 
   // Logout
   doLogout(): void {
@@ -74,7 +76,6 @@ export class UserComponent {
       this.logoutCallback();
     }
   }
-
 
   // Aggiornamento del task
   update(completed: boolean, index?: number): void {
@@ -112,37 +113,9 @@ export class UserComponent {
     console.log(`Bidoni filtrati per tipo "${trashType}":`, this.selectedBins);
   }
 
-  // Calcola la route basata sui bidoni selezionati
-  calculateRoute(): void {
-    if (this.selectedBins.length === 0) {
-      console.warn('Nessun bidone selezionato per calcolare la route.');
-      return;
-    }
 
-    // Creazione dei waypoints basati sui bidoni selezionati
-    const waypoints = this.selectedBins.map((bin) => ({
-      location: { lat: bin.latitude, lng: bin.longitude },
-      stopover: true,
-    }));
-
-    // Ottieni la posizione corrente
-    this.apiService.getCurrentLocation().then((currentLocation) => {
-      this.apiService.calculateRoute(currentLocation, waypoints).subscribe(
-        (response) => {
-          console.log('Route calcolata con successo:', response);
-        },
-        (error) => {
-          console.error('Errore nel calcolo della route:', error);
-        }
-      );
-    });
+  // Calculate route
+  calculateRoute(){
+    this.mapService.callMapMethod();
   }
-
-
-
-
-
-
-
-
 }

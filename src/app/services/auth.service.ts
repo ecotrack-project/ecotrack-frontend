@@ -9,21 +9,28 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
+  private errorLoginSubject = new BehaviorSubject<boolean>(false);
+  errorLogin$ = this.errorLoginSubject.asObservable();
+
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
-    return this.http.post('http://localhost:8080/authenticate/login', { email, password }).subscribe({
+    this.http.post('http://localhost:8080/authenticate/login', { email, password }).subscribe({
       next: (res: any) => {
         localStorage.setItem('jwtToken', res.jwt);
         this.isLoggedInSubject.next(true); // Aggiorna lo stato
       },
-      error: (err) => console.error('Errore durante il login:', err)
+      error: (err) => {
+        console.error('Errore durante il login:', err);
+        this.errorLoginSubject.next(true);
+      }
     });
   }
 
   logout() {
     localStorage.removeItem('jwtToken');
     this.isLoggedInSubject.next(false); // Aggiorna lo stato
+    this.errorLoginSubject.next(false);
   }
 
   checkLoginState() {

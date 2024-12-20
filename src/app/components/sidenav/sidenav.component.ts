@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Microservices
@@ -35,7 +35,8 @@ export class SidenavComponent {
   // Constructor
   constructor(
     private authService: AuthService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   // ApiService call
@@ -54,8 +55,8 @@ export class SidenavComponent {
       this.isUserLoggedIn = loggedIn;
       this.checkTokenAndSetState();
       this.updateSidenavState();
+      this.cdr.detectChanges();
     });
-    this.authService.checkLoginState();
   }
 
   private checkTokenAndSetState(): void {

@@ -4,6 +4,7 @@
     <h1>Login</h1>
 
     <form id="login-form">
+      <p id="errorMessage" [hidden]="!errorLogin">Credenziali errate</p>
       <mat-form-field class="email-form">
         <mat-label>Email</mat-label>
         <input type="email" matInput [formControl]="emailFormControl"

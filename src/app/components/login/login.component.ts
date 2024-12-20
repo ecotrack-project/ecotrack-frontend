@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Material
@@ -44,10 +44,18 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
 
   // Constructor
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.authService.errorLogin$.subscribe((error) => {
+      this.errorLogin = error;
+      this.cdr.detectChanges();
+    });
+   }
 
   // Variable
-  isUserLoggedIn: boolean = false;
+  errorLogin: boolean = false;
 
   // Email control
   emailFormControl = createEmailFormControl();

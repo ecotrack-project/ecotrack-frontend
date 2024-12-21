@@ -134,7 +134,12 @@ export class UserComponent implements OnInit {
     this.selectedBins = this.apiService.markerData.filter(
       (marker) => marker.trashType === trashType
     );
+    if (trashType === 'Tutto') {
+      this.selectedBins = [...this.apiService.markerData];
+      console.log('All bins are now displayed:', this.selectedBins);
+    }
     console.log(`Bins filtered by trash type "${trashType}":`, this.selectedBins);
+
   }
 
   // Calculate and navigate route
@@ -142,4 +147,6 @@ export class UserComponent implements OnInit {
     console.log('Calculating route...');
     this.mapService.callMapMethod();
   }
+
+  
 }

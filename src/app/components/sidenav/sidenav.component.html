@@ -1,11 +1,6 @@
 <!-- Sidenav -->
 <div id="sidenav" [style.width]="sidenavWidth" [@sidenavAnimation]="sidenavState">
 
-  <!-- Logo section -->
-  <div id="logo">
-    <img src="../../../assets/logo/title.png" alt="title">
-  </div>
-
   <!-- Login section -->
   <app-login *ngIf="!isUserLoggedIn"></app-login>
 

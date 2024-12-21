@@ -5,6 +5,22 @@
   justify-content: center;
   align-items: center;
 
+  #logo {
+    width: calc(100% - 30px);
+    max-width: 350px;
+    height: 7vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  #logo img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
   #login-section {
     align-items: center;
     justify-content: center;
@@ -12,8 +28,10 @@
     max-width: 300px;
     color: black;
     background-color: white;
-    padding: 20px 40px 40px 40px;
-    border-radius: 20px;
+    padding: 25px 25px 25px 25px;
+    border-radius: 17px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     #login-form {
       width: 100%;
@@ -21,6 +39,7 @@
 
       .email-form {
         width: 100%;
+        height: 80px;
 
         mat-error {
           font-size: 10px;
@@ -30,6 +49,7 @@
       .password-form {
         margin-top: 10px;
         width: 100%;
+        height: 80px;
       }
     }
 
@@ -37,25 +57,27 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 20px;
       margin-top: 10px;
 
       #loginbutton {
         padding: 10px 15px 10px 15px;
         width: auto;
+        height: 50px;
         font-size: larger;
         color: white;
         background-color: #2b2d42;
-        border-radius: 12px;
+        border-radius: 9px;
       }
 
       #discardbutton {
         padding: 10px 15px 10px 15px;
         width: auto;
+        height: 50px;
         font-size: larger;
         color: white;
         background-color: #d90429;
-        border-radius: 12px;
+        border-radius: 9px;
       }
 
       button:hover {
@@ -71,5 +93,5 @@
   color: #ffffff;
   text-align: center;
   padding: 1vh;
-  border-radius: 1vh;
+  border-radius: 7px;
 }

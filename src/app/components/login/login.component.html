@@ -1,14 +1,21 @@
 <div id="login-container">
 
   <div id="login-section">
+
+    <!-- Logo section -->
+    <div id="logo">
+      <img src="../../../assets/logo/title.png" alt="title">
+    </div>
+
+    <mat-divider></mat-divider>
+
     <h1>Login</h1>
 
     <form id="login-form">
       <p id="errorMessage" [hidden]="!errorLogin">Credenziali errate</p>
       <mat-form-field class="email-form">
         <mat-label>Email</mat-label>
-        <input type="email" matInput [formControl]="emailFormControl"
-          placeholder="es. nome@mail.com">
+        <input type="email" matInput [formControl]="emailFormControl" placeholder="es. nome@mail.com">
         <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
           Email <strong>non valida!</strong>
         </mat-error>
@@ -19,7 +26,7 @@
 
       <mat-form-field class="password-form">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" [formControl]="passwordFormControl"/>
+        <input matInput [type]="hide() ? 'password' : 'text'" [formControl]="passwordFormControl" />
         <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hide()">
           <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>

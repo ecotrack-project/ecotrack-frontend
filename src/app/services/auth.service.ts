@@ -27,6 +27,10 @@ export class AuthService {
     });
   }
 
+
+
+  
+
   logout() {
     localStorage.removeItem('jwtToken');
     this.isLoggedInSubject.next(false); // Aggiorna lo stato

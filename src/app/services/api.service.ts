@@ -26,9 +26,13 @@ export class ApiService {
   // Fetch marker data (bins) from the server
   async getBin(): Promise<void> {
     const getUrl = `http://localhost:8080/trashcan/list`;
+    const token = localStorage.getItem('jwtToken');
+    console.log(token);
 
     try {
-      const response = await axios.get(getUrl);
+
+      const response = await axios.get(getUrl, {headers: {Authorization: `Bearer ${token}`,'Content-Type': 'application/json'}});
+
       this.markerData = response.data.response as Marker[]; // Ensure proper type
       this.dataSubject.next(this.markerData); // Update BehaviorSubject
       console.log('Marker data fetched successfully:', this.markerData);

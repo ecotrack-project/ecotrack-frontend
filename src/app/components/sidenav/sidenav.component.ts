@@ -51,6 +51,7 @@ export class SidenavComponent {
   sidenavWidth: any;
   sidenavState: string | undefined;
 
+  // This method is called when the component is initialized
   ngOnInit() {
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
       this.isUserLoggedIn = loggedIn;

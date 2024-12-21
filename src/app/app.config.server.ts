@@ -4,8 +4,9 @@ import { appConfig } from './app.config';
 
 const serverConfig: ApplicationConfig = {
   providers: [
-    provideServerRendering()
-  ]
+    provideServerRendering(), // Enables server-side rendering
+  ],
 };
 
+// Merge appConfig (with HttpInterceptor) and serverConfig
 export const config = mergeApplicationConfig(appConfig, serverConfig);

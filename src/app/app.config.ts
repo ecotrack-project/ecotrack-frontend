@@ -5,13 +5,14 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { routes } from './app.routes';
-import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthInterceptor, LoggingInterceptor} from './services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes), // Configura le rotte dell'applicazione
     provideClientHydration(), // Abilita l'idratazione per le app server-side
     provideAnimationsAsync(), // Supporta animazioni asincrone
-    provideHttpClient(withInterceptors([AuthInterceptor])) // Aggiunge l'interceptor per le richieste HTTP
+    provideHttpClient(withInterceptors([LoggingInterceptor]))// Aggiunge l'interceptor per le richieste HTTP AuthInterceptor, 
+
   ],
 };

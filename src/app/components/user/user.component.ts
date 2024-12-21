@@ -1,5 +1,5 @@
 import { ApiService } from './../../services/api.service';
-import { Component, computed, Input, signal } from '@angular/core';
+import { Component, computed, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Microservices
@@ -36,13 +36,13 @@ import { MapService } from '../../services/map.service';
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
-export class UserComponent {
-
+export class UserComponent implements OnInit {
   @Input() logoutCallback!: () => void;
 
-  // Variabile esterna per conservare i bidoni scelti
+  // External variable to store selected bins
   public selectedBins: Marker[] = [];
 
+  // Reports fetched from the server
   public reports: Report[] = [];
 
   // Checkbox for trash type
@@ -59,6 +59,7 @@ export class UserComponent {
     ],
   });
 
+  // Computed signal for partial completion of subtasks
   readonly partiallyComplete = computed(() => {
     const task = this.task();
     if (!task.subtasks) {
@@ -70,19 +71,34 @@ export class UserComponent {
     );
   });
 
-  // Costruttore
-  constructor(private apiService: ApiService, private mapService: MapService) { }
+  constructor(private apiService: ApiService, private mapService: MapService) {}
 
-  // Logout
+  ngOnInit(): void {
+    // Fetch reports during component initialization
+    this.apiService.currentReportData$.subscribe({
+      next: (reports) => {
+        this.reports = reports;
+        console.log('Reports updated:', this.reports);
+      },
+      error: (error) => {
+        console.error('Error receiving report updates:', error);
+      },
+    });
+
+    // Fetch initial reports
+    this.apiService.getReport();
+  }
+
+  // Handle user logout
   doLogout(): void {
     if (this.logoutCallback) {
       this.logoutCallback();
     }
   }
 
-  // Aggiornamento del task
+  // Update task completion status
   update(completed: boolean, index?: number): void {
-    console.log('Aggiornamento task:', completed, index);
+    console.log('Task update triggered:', completed, index);
 
     this.task.update((task) => {
       this.apiService.clearMarkers();
@@ -107,18 +123,23 @@ export class UserComponent {
     });
   }
 
+  // Handle keyboard event for report selection
+  handleKeyDown(event: KeyboardEvent): void {
+    console.log('Keydown event on reports tab:', event.key);
+    this.apiService.changeReportData(this.reports);
+  }
 
-  // Funzione per filtrare i bidoni in base al tipo di rifiuto
+  // Filter bins based on trash type
   private filterBinsByType(trashType: string): void {
     this.selectedBins = this.apiService.markerData.filter(
       (marker) => marker.trashType === trashType
     );
-    console.log(`Bidoni filtrati per tipo "${trashType}":`, this.selectedBins);
+    console.log(`Bins filtered by trash type "${trashType}":`, this.selectedBins);
   }
 
-
-  // Calculate route
-  calculateRoute(){
+  // Calculate and navigate route
+  calculateRoute(): void {
+    console.log('Calculating route...');
     this.mapService.callMapMethod();
   }
 }

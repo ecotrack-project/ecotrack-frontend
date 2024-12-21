@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Marker } from '../models/marker.model';
 import { Report } from '../models/report.model';
 
@@ -8,73 +8,83 @@ import { Report } from '../models/report.model';
   providedIn: 'root',
 })
 export class ApiService {
-  constructor() { }
+  constructor() {}
 
   // Contiene i cassonetti fetchati dal server
   public markerData: Marker[] = [];
 
+  // Contiene le segnalazioni fetchate dal server
   public reports: Report[] = [];
 
-  // Ottenere un bin
+  // BehaviorSubjects for sharing marker and report data
+  public dataSubject = new BehaviorSubject<Marker[]>([]);
+  public reportSubject = new BehaviorSubject<Report[]>([]);
+
+  currentData$ = this.dataSubject.asObservable();
+  currentReportData$ = this.reportSubject.asObservable();
+
+  // Fetch marker data (bins) from the server
   async getBin(): Promise<void> {
     const getUrl = `http://localhost:8080/trashcan/list`;
 
     try {
-      // Effettua la chiamata HTTP per ottenere i dati dei marker
       const response = await axios.get(getUrl);
-      this.markerData = response.data.response as Marker[]; // Modifica se il formato dei dati locali è diverso
-      this.dataSubject.next(this.markerData); // Aggiorna il BehaviorSubject con i nuovi dati ricevuti
-      console.log(response.data.response);
+      this.markerData = response.data.response as Marker[]; // Ensure proper type
+      this.dataSubject.next(this.markerData); // Update BehaviorSubject
+      console.log('Marker data fetched successfully:', this.markerData);
     } catch (error) {
-      // Gestione degli errori nella chiamata
-      console.error('Errore durante il recupero dei dati:', error);
+      console.error('Error fetching marker data:', error);
     }
   }
 
-  // Ottenere segnalazioni
+  // Fetch report data from the server
   async getReport(): Promise<void> {
     const getUrl = `http://localhost:8080/report/list`;
 
     try {
-      // Effettua la chiamata HTTP per ottenere i dati dei marker
       const response = await axios.get(getUrl);
-      this.reports = response.data.response as Report[]; // Modifica se il formato dei dati locali è diverso
-      this.reportSubject.next(this.reports); // Aggiorna il BehaviorSubject con i nuovi dati ricevuti
-      console.log(response.data.response);
+      this.reports = response.data.response as Report[]; // Ensure proper type
+      this.reportSubject.next(this.reports); // Update BehaviorSubject
+      console.log('Report data fetched successfully:', this.reports);
     } catch (error) {
-      // Gestione degli errori nella chiamata
-      console.error('Errore durante il recupero dei dati:', error);
+      console.error('Error fetching report data:', error);
     }
   }
 
-  // Restituisci
+  // Get all marker data
   getMarkerData(): Marker[] {
-    // Restituisce i dati dei marker
     return this.markerData;
   }
 
-  // Crea un BehaviorSubject per trasmettere la stringa
-  public dataSubject = new BehaviorSubject<Marker[]>([]);
-  currentData$ = this.dataSubject.asObservable();
+  // Get all reports
+  getReports(): Report[] {
+    return this.reports;
+  }
 
-  // Metodo per aggiornare il valore della stringa
+  // Update marker data
   changeData(newData: Marker[]): void {
-    this.dataSubject.next(newData); // Aggiorna il BehaviorSubject con i nuovi dati
+    this.dataSubject.next(newData);
   }
 
-   // Crea un BehaviorSubject per trasmettere la stringa
-   public reportSubject = new BehaviorSubject<Report[]>([]);
-   currentReportData$ = this.reportSubject.asObservable();
+  // Update report data
+  changeReportData(newData: Report[]): void {
+    this.reportSubject.next(newData);
+  }
 
-   // Metodo per aggiornare il valore della stringa
-   changeReportData(newData: Report[]): void {
-     this.reportSubject.next(newData); // Aggiorna il BehaviorSubject con i nuovi dati
-   }
-
-  // Metodo per pulire i marker
+  // Clear all markers
   public clearMarkers(): void {
-    this.dataSubject.next([]); // Aggiorna il BehaviorSubject
-    console.log('Tutti i marker sono stati rimossi dalla mappa.');
+    this.dataSubject.next([]); // Clear markers in the BehaviorSubject
+    console.log('All markers have been cleared from the map.');
   }
 
+  // Helper function to fetch initial data for markers and reports
+  async fetchInitialData(): Promise<void> {
+    try {
+      console.log('Fetching initial data for markers and reports...');
+      await Promise.all([this.getBin(), this.getReport()]);
+      console.log('Initial data fetch complete.');
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+    }
+  }
 }

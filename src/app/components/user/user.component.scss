@@ -19,6 +19,8 @@
     margin: 0 12px;
   }
 
+
+
   #logoutbutton {
     padding: 10px 15px 10px 15px;
     margin-top: auto;
@@ -40,5 +42,34 @@
     margin-bottom: 10px;
     border-radius: 12px;
   }
+
+
+  .report-content {
+    background-color: #f9f9f9; /* Light background for readability */
+    border: 1px solid #e0e0e0; /* Subtle border for structure */
+    border-radius: 15px; /* Rounded corners for a modern look */
+    padding: 15px; /* Internal spacing */
+    margin: 10px 0; /* Space between each report card */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
+
+    &:hover {
+      transform: translateY(-1.5px); /* Slight lift on hover */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    }
+
+    h5 {
+      margin: 0 0 8px 0; /* Space below the title */
+      font-size: 1.1rem; /* Slightly larger font for emphasis */
+      color: #333; /* Darker text color for visibility */
+    }
+
+    p {
+      margin: 4px 0; /* Space between paragraphs */
+      font-size: 0.95rem; /* Slightly smaller font size for secondary text */
+      color: #555; /* Muted text color for descriptions */
+    }
+  }
+
 
 }

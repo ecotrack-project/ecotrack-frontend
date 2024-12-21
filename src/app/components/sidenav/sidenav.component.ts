@@ -58,6 +58,7 @@ export class SidenavComponent {
       this.updateSidenavState();
       // Chiamata per caricare i dati
       this.apiService.getBin();
+      this.apiService.getReport();
       this.cdr.detectChanges();
     });
   }

@@ -9,7 +9,7 @@
   <mat-divider></mat-divider>
 
   <h1>Dashboard</h1>
-  <mat-tab-group fitInkBarToContent>
+  <mat-tab-group fitInkBarToContent id="tab-group">
     <!-- First tab for cleaning -->
     <mat-tab label="Pulizia">
       <p>Selezionare tipologia di rifiuto</p>
@@ -26,14 +26,16 @@
     </mat-tab>
     <!-- Second tab for reports -->
     <mat-tab label="Segnalazioni">
-      <div *ngFor="let rep of reports" class="report-container" (keydown)="handleKeyDown($event)">
+      <div class="report-container">
+        <div *ngFor="let rep of reports" class="report" (keydown)="handleKeyDown($event)">
 
-        <div class="report-content">
-          <p>Email: <strong>{{rep.userEmail}}</strong></p>
-          <p>Id contenitore: {{rep.trashcanId}}</p>
-          <p>Descrizione: {{rep.description}}</p>
+          <div class="report-content">
+            <p>Email: <strong>{{rep.userEmail}}</strong></p>
+            <p>Id contenitore: {{rep.trashcanId}}</p>
+            <p>Descrizione: {{rep.description}}</p>
+          </div>
+
         </div>
-
       </div>
     </mat-tab>
 

@@ -6,6 +6,7 @@
   color: black;
   margin-top: 4px;
   min-height: 80vh;
+  max-height: 80vh;
   background-color: white;
   padding: 25px 25px 25px 25px;
   border-radius: 17px;
@@ -56,6 +57,7 @@
     font-size: larger;
     color: white;
     background-color: #2b2d42;
+    margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 9px;
   }
@@ -85,5 +87,9 @@
       font-size: 0.95rem;
       color: #555;
     }
+  }
+
+  #tab-group {
+    overflow: auto;
   }
 }

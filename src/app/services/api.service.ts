@@ -27,7 +27,6 @@ export class ApiService {
   async getBin(): Promise<void> {
     const getUrl = `http://localhost:8080/trashcan/list`;
     const token = localStorage.getItem('jwtToken');
-    console.log(token);
 
     try {
 
@@ -44,9 +43,10 @@ export class ApiService {
   // Fetch report data from the server
   async getReport(): Promise<void> {
     const getUrl = `http://localhost:8080/report/list`;
+    const token = localStorage.getItem('jwtToken');
 
     try {
-      const response = await axios.get(getUrl);
+      const response = await axios.get(getUrl, {headers: {Authorization: `Bearer ${token}`,'Content-Type': 'application/json'}});
       this.reports = response.data.response as Report[]; // Ensure proper type
       this.reportSubject.next(this.reports); // Update BehaviorSubject
       console.log('Report data fetched successfully:', this.reports);
